@@ -1,25 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="de.jbapps.ledirremote" >
+    package="de.jbapps.ledirremote">
 
     <uses-permission android:name="android.permission.TRANSMIT_IR" />
 
     <uses-feature android:name="android.hardware.consumerir" />
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".RemoteNotificationService"
+            android:enabled="true"
+            android:icon="@drawable/ic_ir_remote_service"
+            android:label="@string/service_name_control"
+            android:process=":control_service" />
+
+        <activity android:name=".NotificationSettingsActivity" />
+
+        <receiver
+            android:name=".AutostartReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

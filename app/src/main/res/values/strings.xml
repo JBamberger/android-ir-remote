@@ -3,4 +3,11 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="service_name_control">IRRemoteService</string>
+    <string name="intentfilter_send_code">de.jbamberger.irledremote.intentfilter.sendcode</string>
+
+    <string name="control_notification_title_template">Control: %1$s</string>
+
+    <string name="action_share">Share</string>
+    <string name="action_reply">Reply</string>
 </resources>
