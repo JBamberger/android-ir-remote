@@ -34,15 +34,16 @@ public class MainActivity extends AppCompatActivity {
     };
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //setContentView(new HeartbeatView(this));
+
+
         Intent startService = new Intent(this, RemoteNotificationService.class);
         startService(startService);
         bindService(startService, serviceConnection, BIND_AUTO_CREATE);
-
 
 
     }

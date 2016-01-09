@@ -112,7 +112,7 @@ public class RemoteNotificationService extends Service {
         RemoteViews layoutBig = new RemoteViews(getPackageName(), R.layout.notification_control_big);
         new NotificationInflater().generateLayout(this, layoutBig);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setDefaults(Notification.DEFAULT_ALL)
+                //TODO: foo .setDefaults(Notification.DEFAULT_ALL)
                 .setSmallIcon(R.drawable.ic_stat_notification)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                         .setContent(layout)
