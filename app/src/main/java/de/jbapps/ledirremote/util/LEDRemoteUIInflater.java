@@ -16,9 +16,9 @@ import de.jbapps.ledirremote.RemoteNotificationService;
  * @author Jannik
  * @version 04.01.2016
  */
-public class NotificationInflater {
+public class LEDRemoteUIInflater {
 
-    private static final String TAG = "NotificationInflater";
+    private static final String TAG = "LEDRemoteUIInflater";
     private int gridHeight = 4;
     private int gridWidth = 4;
 
