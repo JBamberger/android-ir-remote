@@ -16,7 +16,8 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import de.jbapps.ledirremote.util.NotificationInflater;
+import de.jbapps.ledirremote.util.Tools;
+
 
 public class RemoteNotificationService extends Service {
 
@@ -91,38 +92,38 @@ public class RemoteNotificationService extends Service {
 
 
     private void setForegroundPriority() {
-        Intent actionBrightnessUp = new Intent();
-        actionBrightnessUp.setAction(getString(R.string.intentfilter_send_code));
-        actionBrightnessUp.putExtra(IR_CODE_NAME, IR_CODE_UP);
-
-        Intent actionPower = new Intent();
-        actionPower.setAction(getString(R.string.intentfilter_send_code));
-        actionPower.putExtra(IR_CODE_NAME, IR_CODE_POWER);
-
-        Intent actionBrightnessDown = new Intent();
-        actionBrightnessDown.setAction(getString(R.string.intentfilter_send_code));
-        actionBrightnessDown.putExtra(IR_CODE_NAME, IR_CODE_DOWN);
-
-        Intent actionPlay = new Intent();
-        actionPlay.setAction(getString(R.string.intentfilter_send_code));
-        actionPlay.putExtra(IR_CODE_NAME, IR_CODE_PLAY);
+        int[][] intents = {
+                {
+                        R.id.button_power,
+                        R.id.button_play,
+                        R.id.button_brightness_up,
+                        R.id.button_brightness_down
+                },
+                {
+                        IR_CODE_POWER,
+                        IR_CODE_PLAY,
+                        IR_CODE_UP,
+                        IR_CODE_DOWN
+                }
+        };
 
         Resources res = this.getResources();
         RemoteViews layout = new RemoteViews(getPackageName(), R.layout.notification_control);
-        RemoteViews layoutBig = new RemoteViews(getPackageName(), R.layout.notification_control_big);
-        new NotificationInflater().generateLayout(this, layoutBig);
+        //RemoteViews layoutBig = new RemoteViews(getPackageName(), R.layout.notification_control_big);
+        //new LEDRemoteUIInflater().generateLargeNotificationLayout(this, layoutBig);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 //TODO: foo .setDefaults(Notification.DEFAULT_ALL)
                 .setSmallIcon(R.drawable.ic_stat_notification)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                        .setContent(layout)
+                .setContent(layout)
                 .setAutoCancel(false);
         Notification notification = builder.build();
-        notification.bigContentView = layoutBig;
-        layout.setOnClickPendingIntent(R.id.button_power, PendingIntent.getBroadcast(this, 1, actionPower, PendingIntent.FLAG_UPDATE_CURRENT));
-        layout.setOnClickPendingIntent(R.id.button_play, PendingIntent.getBroadcast(this, 2, actionPlay, PendingIntent.FLAG_UPDATE_CURRENT));
-        layout.setOnClickPendingIntent(R.id.button_brightness_up, PendingIntent.getBroadcast(this, 3, actionBrightnessUp, PendingIntent.FLAG_UPDATE_CURRENT));
-        layout.setOnClickPendingIntent(R.id.button_brightness_down, PendingIntent.getBroadcast(this, 4, actionBrightnessDown, PendingIntent.FLAG_UPDATE_CURRENT));
+        //notification.bigContentView = layoutBig;
+        for(int[] i : intents) {
+            layout.setOnClickPendingIntent(i[0], PendingIntent.getBroadcast(this, i[0],
+                        Tools.generateIRSenderIntent(getApplicationContext(), i[1]),
+                        PendingIntent.FLAG_UPDATE_CURRENT));
+        }
         this.startForeground(101, notification);
         Log.i("SERVICE", "Started with foreground priority");
     }

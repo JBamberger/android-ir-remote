@@ -1,6 +1,12 @@
 package de.jbapps.ledirremote.util;
 
+import android.content.Context;
+import android.content.Intent;
+
 import java.util.ArrayList;
+
+import de.jbapps.ledirremote.R;
+import de.jbapps.ledirremote.RemoteNotificationService;
 
 /**
  * Created: 04.01.2016
@@ -9,6 +15,13 @@ import java.util.ArrayList;
  * @version 04.01.2016
  */
 public class Tools {
+
+    public static Intent generateIRSenderIntent(Context context, int code) {
+        Intent intent = new Intent();
+        intent.setAction(context.getString(R.string.intentfilter_send_code));
+        intent.putExtra(RemoteNotificationService.IR_CODE_NAME, code);
+        return intent;
+    }
 
     private int[] generateCode(int[] c) {
 

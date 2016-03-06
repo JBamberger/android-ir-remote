@@ -161,4 +161,27 @@
         <item>@color/white4</item>
     </array>
 
+    <string-array name="noti_images">
+        <item>@drawable/ic_action_power</item>
+        <item>@drawable/ic_image_color_lens</item>
+        <item>@drawable/ic_image_color_lens</item>
+        <item>@drawable/ic_image_color_lens</item>
+        <item>@drawable/ic_image_color_lens</item>
+        <item>@drawable/ic_image_color_lens</item>
+        <item>@drawable/ic_image_color_lens</item>
+        <item>@drawable/ic_image_color_lens</item>
+        <item>@drawable/ic_image_color_lens</item>
+        <item>@drawable/ic_image_color_lens</item>
+        <item>@drawable/ic_image_color_lens</item>
+        <item>@drawable/ic_image_color_lens</item>
+        <item>@drawable/ic_image_color_lens</item>
+        <item>@drawable/ic_image_color_lens</item>
+        <item>@drawable/ic_image_color_lens</item>
+        <item>@drawable/ic_image_color_lens</item>
+        <item>@drawable/ic_image_color_lens</item>
+        <item>@drawable/ic_image_color_lens</item>
+        <item>@drawable/ic_image_color_lens</item>
+        <item>@drawable/ic_image_color_lens</item>
+    </string-array>
+
 </resources>

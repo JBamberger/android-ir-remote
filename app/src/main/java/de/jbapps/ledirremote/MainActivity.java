@@ -12,6 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TableLayout;
+
+import de.jbapps.ledirremote.util.LEDRemoteUIInflater;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -38,12 +41,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //setContentView(new HeartbeatView(this));
 
 
         Intent startService = new Intent(this, RemoteNotificationService.class);
         startService(startService);
         bindService(startService, serviceConnection, BIND_AUTO_CREATE);
+
+        TableLayout layout = (TableLayout) findViewById(R.id.main_layout);
+        LEDRemoteUIInflater inf = new LEDRemoteUIInflater();
+        inf.inflateRemoteControlUI(this, layout);
 
 
     }
@@ -56,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
             msg.arg1 = RemoteNotificationService.IR_CODE_POWER;
             try {
                 mService.send(msg);
+
+
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
