@@ -8,6 +8,10 @@
 
     <string name="control_notification_title_template">Control: %1$s</string>
 
+    <string name="tile_name_power">LED Power</string>
+    <string name="tile_name_color_green">LED Color Green</string>
+
     <string name="action_share">Share</string>
     <string name="action_reply">Reply</string>
+    <string name="title_activity_empty">EmptyActivity</string>
 </resources>

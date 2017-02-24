@@ -1,4 +1,4 @@
-package de.jbapps.ledirremote;
+package de.jbamberger.ledirremote;
 
 import android.content.ComponentName;
 import android.content.Intent;
@@ -14,7 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TableLayout;
 
-import de.jbapps.ledirremote.util.LEDRemoteUIInflater;
+import de.jbamberger.ledirremote.util.LEDRemoteUIInflater;
 
 
 public class MainActivity extends AppCompatActivity {

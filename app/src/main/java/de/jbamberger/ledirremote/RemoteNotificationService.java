@@ -1,4 +1,4 @@
-package de.jbapps.ledirremote;
+package de.jbamberger.ledirremote;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -16,7 +16,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import de.jbapps.ledirremote.util.Tools;
+import de.jbamberger.ledirremote.util.Tools;
 
 
 public class RemoteNotificationService extends Service {

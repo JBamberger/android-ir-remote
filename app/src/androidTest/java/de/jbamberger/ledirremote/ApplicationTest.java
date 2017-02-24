@@ -1,4 +1,4 @@
-package de.jbapps.ledirremote;
+package de.jbamberger.ledirremote;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

@@ -1,4 +1,4 @@
-package de.jbapps.ledirremote;
+package de.jbamberger.ledirremote;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

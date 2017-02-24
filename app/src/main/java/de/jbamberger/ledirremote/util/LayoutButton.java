@@ -1,4 +1,4 @@
-package de.jbapps.ledirremote.util;
+package de.jbamberger.ledirremote.util;
 
 /**
  * Created: 04.01.2016

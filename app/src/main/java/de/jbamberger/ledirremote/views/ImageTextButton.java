@@ -1,4 +1,4 @@
-package de.jbapps.ledirremote;
+package de.jbamberger.ledirremote.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
