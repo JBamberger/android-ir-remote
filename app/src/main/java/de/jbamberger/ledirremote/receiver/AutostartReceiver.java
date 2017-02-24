@@ -1,8 +1,10 @@
-package de.jbamberger.ledirremote;
+package de.jbamberger.ledirremote.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
+import de.jbamberger.ledirremote.service.RemoteNotificationService;
 
 public class AutostartReceiver extends BroadcastReceiver {
     public AutostartReceiver() {

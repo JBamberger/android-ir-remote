@@ -1,4 +1,4 @@
-package de.jbamberger.ledirremote;
+package de.jbamberger.ledirremote.ui;
 
 import android.content.ComponentName;
 import android.content.Intent;
@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TableLayout;
 
+import de.jbamberger.ledirremote.R;
+import de.jbamberger.ledirremote.service.RemoteNotificationService;
 import de.jbamberger.ledirremote.util.LEDRemoteUIInflater;
 
 

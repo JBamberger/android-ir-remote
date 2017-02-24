@@ -6,7 +6,7 @@ import android.content.Intent;
 import java.util.ArrayList;
 
 import de.jbamberger.ledirremote.R;
-import de.jbamberger.ledirremote.RemoteNotificationService;
+import de.jbamberger.ledirremote.service.RemoteNotificationService;
 
 /**
  * Created: 04.01.2016

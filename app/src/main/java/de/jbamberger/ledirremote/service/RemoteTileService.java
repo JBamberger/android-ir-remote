@@ -1,132 +1,73 @@
-package de.jbamberger.ledirremote;
+package de.jbamberger.ledirremote.service;
 
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.app.Service;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.res.Resources;
 import android.hardware.ConsumerIrManager;
-import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
-import android.support.v4.app.NotificationCompat;
-import android.util.Log;
-import android.widget.RemoteViews;
+import android.service.quicksettings.TileService;
+import android.widget.Toast;
 
-import de.jbamberger.ledirremote.util.Tools;
+public class RemoteTileService extends TileService {
+    private static final String TAG = "TileService";
 
+    @Override
+    public void onDestroy() {
+//        Log.d(TAG, "onDestroy() called");
+        super.onDestroy();
+    }
 
-public class RemoteNotificationService extends Service {
+    @Override
+    public void onTileAdded() {
+//        Log.d(TAG, "onTileAdded() called");
+        super.onTileAdded();
+    }
 
-    private static final String TAG = "REMOTESERVICE";
+    @Override
+    public void onTileRemoved() {
+//        Log.d(TAG, "onTileRemoved() called");
+        super.onTileRemoved();
+    }
 
-    public static final int COM_SEND_CODE = 5;
+    @Override
+    public void onStartListening() {
+//        Log.d(TAG, "onStartListening() called");
+        super.onStartListening();
+    }
 
-    private BroadcastReceiver mReceiver;
-    private Messenger mServer = new Messenger(new IncomingHandler());
+    @Override
+    public void onStopListening() {
+//        Log.d(TAG, "onStopListening() called");
+        super.onStopListening();
+    }
+
+    @Override
+    public void onClick() {
+        super.onClick();
+//        Log.d(TAG, "onClick() called");
+        send(IR_CODE_POWER);
+    }
+
     private ConsumerIrManager mIRManager;
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        return START_STICKY;
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return mServer.getBinder();
-    }
-
-    private class IncomingHandler extends android.os.Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            Log.d(TAG, "message incoming: " + msg.what);
-            switch (msg.what) {
-                case COM_SEND_CODE:
-                    Log.d(TAG, "Received " + msg.arg1);
-                    send(msg.arg1);
-
-                default:
-                    super.handleMessage(msg);
-            }
-        }
-    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        setForegroundPriority();
         mIRManager = (ConsumerIrManager) getSystemService(CONSUMER_IR_SERVICE);
-        mReceiver = new BroadcastReceiver() {
-
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.d(TAG, "Received message");
-                int code = intent.getIntExtra(IR_CODE_NAME, -100);
-                Log.d(TAG, "Code: " + code);
-                send(code);
-            }
-        };
-        IntentFilter intentFilter = new IntentFilter(getString(R.string.intentfilter_send_code));
-        registerReceiver(mReceiver, intentFilter);
-        Log.d(TAG, "Receiver registered.");
+//        Log.d(TAG, "onCreate() called");
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(mReceiver);
-        Log.d(TAG, "Receiver unregistered.");
-    }
 
     private void send(int codeNumber) {
-        if (mIRManager != null) {
+        if (mIRManager != null && mIRManager.hasIrEmitter()) {
             if (codeNumber >= 0 && codeNumber < IR_CODES.length) {
                 mIRManager.transmit(FREQUENCY, IR_CODES[codeNumber]);
-                Log.d(TAG, "Transmitted code nr. " + codeNumber + " at freq: " + FREQUENCY);
+//                Log.d(TAG, "Transmitted code nr. " + codeNumber + " at freq: " + FREQUENCY);
             }
+        } else {
+            Toast.makeText(this, "An error occurred while transmitting.", Toast.LENGTH_LONG).show();// TODO: 16.02.2017 replace with res
         }
     }
 
 
-    private void setForegroundPriority() {
-        int[][] intents = {
-                {
-                        R.id.button_power,
-                        R.id.button_play,
-                        R.id.button_brightness_up,
-                        R.id.button_brightness_down
-                },
-                {
-                        IR_CODE_POWER,
-                        IR_CODE_PLAY,
-                        IR_CODE_UP,
-                        IR_CODE_DOWN
-                }
-        };
 
-        Resources res = this.getResources();
-        RemoteViews layout = new RemoteViews(getPackageName(), R.layout.notification_control);
-        //RemoteViews layoutBig = new RemoteViews(getPackageName(), R.layout.notification_control_big);
-        //new LEDRemoteUIInflater().generateLargeNotificationLayout(this, layoutBig);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                //TODO: foo .setDefaults(Notification.DEFAULT_ALL)
-                .setSmallIcon(R.drawable.ic_stat_notification)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContent(layout)
-                .setAutoCancel(false);
-        Notification notification = builder.build();
-        //notification.bigContentView = layoutBig;
-        for(int[] i : intents) {
-            layout.setOnClickPendingIntent(i[0], PendingIntent.getBroadcast(this, i[0],
-                        Tools.generateIRSenderIntent(getApplicationContext(), i[1]),
-                        PendingIntent.FLAG_UPDATE_CURRENT));
-        }
-        this.startForeground(101, notification);
-        Log.i("SERVICE", "Started with foreground priority");
-    }
 
 
     private static final int FREQUENCY = 38000;
