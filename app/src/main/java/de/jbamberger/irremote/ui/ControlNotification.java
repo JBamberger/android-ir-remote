@@ -1,4 +1,4 @@
-package de.jbamberger.ledirremote.ui;
+package de.jbamberger.irremote.ui;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
@@ -13,7 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
-import de.jbamberger.ledirremote.R;
+import de.jbamberger.irremote.R;
 
 /**
  * Helper class for showing and canceling control

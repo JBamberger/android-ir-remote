@@ -1,4 +1,4 @@
-package de.jbamberger.ledirremote.views;
+package de.jbamberger.irremote.views;
 
 import android.animation.ValueAnimator;
 import android.graphics.Canvas;

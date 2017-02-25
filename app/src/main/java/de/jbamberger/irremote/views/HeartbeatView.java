@@ -1,4 +1,4 @@
-package de.jbamberger.ledirremote.views;
+package de.jbamberger.irremote.views;
 
 import android.content.Context;
 import android.graphics.Canvas;

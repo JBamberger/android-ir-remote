@@ -1,4 +1,4 @@
-package de.jbamberger.ledirremote.util;
+package de.jbamberger.irremote.util;
 
 import java.util.Set;
 

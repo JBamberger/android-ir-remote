@@ -1,4 +1,4 @@
-package de.jbamberger.ledirremote;
+package de.jbamberger.irremote;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

@@ -1,4 +1,4 @@
-package de.jbamberger.ledirremote.ui;
+package de.jbamberger.irremote.ui;
 
 import android.content.ComponentName;
 import android.content.Intent;
@@ -14,9 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TableLayout;
 
-import de.jbamberger.ledirremote.R;
-import de.jbamberger.ledirremote.service.RemoteNotificationService;
-import de.jbamberger.ledirremote.util.LEDRemoteUIInflater;
+import de.jbamberger.irremote.R;
+import de.jbamberger.irremote.service.RemoteNotificationService;
+import de.jbamberger.irremote.util.LEDRemoteUIInflater;
 
 
 public class MainActivity extends AppCompatActivity {

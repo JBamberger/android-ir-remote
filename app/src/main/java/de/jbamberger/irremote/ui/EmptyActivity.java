@@ -1,10 +1,10 @@
-package de.jbamberger.ledirremote.ui;
+package de.jbamberger.irremote.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import de.jbamberger.ledirremote.R;
+import de.jbamberger.irremote.R;
 
 public class EmptyActivity extends AppCompatActivity {
 

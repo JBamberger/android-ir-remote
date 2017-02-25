@@ -1,9 +1,9 @@
-package de.jbamberger.ledirremote.ui;
+package de.jbamberger.irremote.ui;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import de.jbamberger.ledirremote.R;
+import de.jbamberger.irremote.R;
 
 public class NotificationSettingsActivity extends AppCompatActivity {
 

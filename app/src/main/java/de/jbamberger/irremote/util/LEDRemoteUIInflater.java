@@ -1,4 +1,4 @@
-package de.jbamberger.ledirremote.util;
+package de.jbamberger.irremote.util;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -13,8 +13,8 @@ import android.widget.RemoteViews;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
-import de.jbamberger.ledirremote.R;
-import de.jbamberger.ledirremote.service.RemoteNotificationService;
+import de.jbamberger.irremote.R;
+import de.jbamberger.irremote.service.RemoteNotificationService;
 
 /**
  * Created: 04.01.2016

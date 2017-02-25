@@ -1,12 +1,12 @@
-package de.jbamberger.ledirremote.util;
+package de.jbamberger.irremote.util;
 
 import android.content.Context;
 import android.content.Intent;
 
 import java.util.ArrayList;
 
-import de.jbamberger.ledirremote.R;
-import de.jbamberger.ledirremote.service.RemoteNotificationService;
+import de.jbamberger.irremote.R;
+import de.jbamberger.irremote.service.RemoteNotificationService;
 
 /**
  * Created: 04.01.2016
