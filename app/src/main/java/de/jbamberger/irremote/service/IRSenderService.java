@@ -1,71 +1,62 @@
 package de.jbamberger.irremote.service;
 
+import android.app.IntentService;
+import android.content.Intent;
+import android.content.Context;
 import android.hardware.ConsumerIrManager;
-import android.service.quicksettings.TileService;
 import android.widget.Toast;
 
-public class RemoteTileService extends TileService {
-    private static final String TAG = "TileService";
+public class IRSenderService extends IntentService {
 
-    @Override
-    public void onDestroy() {
-//        Log.d(TAG, "onDestroy() called");
-        super.onDestroy();
+    private static final String ACTION_SEND_IRCODE = "de.jbamberger.irremote.service.action.SEND_IRCODE";
+
+    private static final String EXTRA_POSITION = "de.jbamberger.irremote.service.extra.POSITION";
+
+    public IRSenderService() {
+        super("IRSenderService");
     }
 
-    @Override
-    public void onTileAdded() {
-//        Log.d(TAG, "onTileAdded() called");
-        super.onTileAdded();
-    }
-
-    @Override
-    public void onTileRemoved() {
-//        Log.d(TAG, "onTileRemoved() called");
-        super.onTileRemoved();
-    }
-
-    @Override
-    public void onStartListening() {
-//        Log.d(TAG, "onStartListening() called");
-        super.onStartListening();
-    }
-
-    @Override
-    public void onStopListening() {
-//        Log.d(TAG, "onStopListening() called");
-        super.onStopListening();
-    }
-
-    @Override
-    public void onClick() {
-        super.onClick();
-//        Log.d(TAG, "onClick() called");
-        send(IR_CODE_POWER);
-    }
 
     private ConsumerIrManager mIRManager;
-
 
     @Override
     public void onCreate() {
         super.onCreate();
         mIRManager = (ConsumerIrManager) getSystemService(CONSUMER_IR_SERVICE);
-//        Log.d(TAG, "onCreate() called");
     }
 
+    public static void startActionSendIrcode(Context context, int position) {
+        Intent intent = new Intent(context, IRSenderService.class);
+        intent.setAction(ACTION_SEND_IRCODE);
+        intent.putExtra(EXTRA_POSITION, position);
+        context.startService(intent);
+    }
+
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        if (intent != null) {
+            final String action = intent.getAction();
+            if (ACTION_SEND_IRCODE.equals(action)) {
+                final int position = intent.getIntExtra(EXTRA_POSITION, 0);
+                handleActionSendIrcode(position);
+            }
+        }
+    }
+
+    private void handleActionSendIrcode(int position) {
+        send(position);
+    }
 
     private void send(int codeNumber) {
         if (mIRManager != null && mIRManager.hasIrEmitter()) {
-            if (codeNumber >= 0 && codeNumber < IR_CODES.length) {
-                mIRManager.transmit(FREQUENCY, IR_CODES[codeNumber]);
+            if (codeNumber >= 0 && codeNumber < PANCODES.length) {
+                mIRManager.transmit(FREQUENCY, PANCODES[codeNumber]);
 //                Log.d(TAG, "Transmitted code nr. " + codeNumber + " at freq: " + FREQUENCY);
             }
         } else {
             Toast.makeText(this, "An error occurred while transmitting.", Toast.LENGTH_LONG).show();// TODO: 16.02.2017 replace with res
         }
     }
-
 
     public static final String[] PANNAMES = {
             "0",
@@ -168,7 +159,7 @@ public class RemoteTileService extends TileService {
     };
 
     private static final int FREQUENCY = 38000;
-    private static final int[][] IR_CODES = {
+    private static final int[][] LEDCODES = {
             /*0  power    */{9000, 4500, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 1690, 560, 560, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 560, 560, 1690, 560},
             /*1  play     */{9000, 4500, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 1690, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 1690, 560, 560, 560, 560, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 560, 560, 1690, 560},
             /*2  up       */{9000, 4500, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 1690, 560, 1690, 560, 1690, 560, 560, 560, 1690, 560, 560, 560, 1690, 560, 1690, 560, 560, 560, 560, 560, 560, 560, 1690, 560, 560, 560, 1690, 560},
@@ -214,98 +205,50 @@ public class RemoteTileService extends TileService {
             /*42 white3   */{9000, 4500, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 1690, 560, 1690, 560, 1690, 560},
             /*43 white4   */{9000, 4500, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 1690, 560, 1690, 560, 560, 560, 1690, 560, 1690, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 1690, 560, 560, 560, 560, 560, 1690, 560, 1690, 560, 1690, 560}};
 
-
-    public static final int IR_CODE_POWER = 0;
-    public static final int IR_CODE_PLAY = 1;
-    public static final int IR_CODE_UP = 2;
-    public static final int IR_CODE_DOWN = 3;
-    public static final int IR_CODE_QUICK = 4;
-    public static final int IR_CODE_SLOW = 5;
-    public static final int IR_CODE_AUTO = 6;
-    public static final int IR_CODE_FLASH = 7;
-    public static final int IR_CODE_JUMP_3 = 8;
-    public static final int IR_CODE_JUMP_7 = 9;
-    public static final int IR_CODE_FADE_3 = 10;
-    public static final int IR_CODE_FADE_7 = 11;
-    public static final int IR_CODE_REDUP = 12;
-    public static final int IR_CODE_REDDOWN = 13;
-    public static final int IR_CODE_GREENUP = 14;
-    public static final int IR_CODE_GREENDOWN = 15;
-    public static final int IR_CODE_BLUEUP = 16;
-    public static final int IR_CODE_BLUEDOWN = 17;
-    public static final int IR_CODE_DIY_1 = 18;
-    public static final int IR_CODE_DIY_2 = 19;
-    public static final int IR_CODE_DIY_3 = 20;
-    public static final int IR_CODE_DIY_4 = 21;
-    public static final int IR_CODE_DIY_5 = 22;
-    public static final int IR_CODE_DIY_6 = 23;
-    public static final int IR_CODE_RED_0 = 24;
-    public static final int IR_CODE_RED_1 = 25;
-    public static final int IR_CODE_RED_2 = 26;
-    public static final int IR_CODE_RED_3 = 27;
-    public static final int IR_CODE_RED_4 = 28;
-    public static final int IR_CODE_GREEN_0 = 29;
-    public static final int IR_CODE_GREEN_1 = 30;
-    public static final int IR_CODE_GREEN_2 = 31;
-    public static final int IR_CODE_GREEN_3 = 32;
-    public static final int IR_CODE_GREEN_4 = 33;
-    public static final int IR_CODE_BLUE_0 = 34;
-    public static final int IR_CODE_BLUE_1 = 35;
-    public static final int IR_CODE_BLUE_2 = 36;
-    public static final int IR_CODE_BLUE_3 = 37;
-    public static final int IR_CODE_BLUE_4 = 38;
-    public static final int IR_CODE_WHITE_0 = 39;
-    public static final int IR_CODE_WHITE_1 = 40;
-    public static final int IR_CODE_WHITE_2 = 41;
-    public static final int IR_CODE_WHITE_3 = 42;
-    public static final int IR_CODE_WHITE_4 = 43;
-
-
-    public static final String IR_CODE_NAME = "ir_code_name";
-    public static final String IR_CODE_NAME_POWER = "power";
-    public static final String IR_CODE_NAME_PLAY = "play";
-    public static final String IR_CODE_NAME_UP = "up";
-    public static final String IR_CODE_NAME_DOWN = "down";
-    public static final String IR_CODE_NAME_QUICK = "quick";
-    public static final String IR_CODE_NAME_SLOW = "slow";
-    public static final String IR_CODE_NAME_AUTO = "auto";
-    public static final String IR_CODE_NAME_FLASH = "flash";
-    public static final String IR_CODE_NAME_JUMP_3 = "jump3";
-    public static final String IR_CODE_NAME_JUMP_7 = "jump7";
-    public static final String IR_CODE_NAME_FADE_3 = "fade3";
-    public static final String IR_CODE_NAME_FADE_7 = "fade7";
-    public static final String IR_CODE_NAME_REDUP = "redUp";
-    public static final String IR_CODE_NAME_REDDOWN = "redDown";
-    public static final String IR_CODE_NAME_GREENUP = "greenUp";
-    public static final String IR_CODE_NAME_GREENDOWN = "greenDown";
-    public static final String IR_CODE_NAME_BLUEUP = "blueUp";
-    public static final String IR_CODE_NAME_BLUEDOWN = "blueDown";
-    public static final String IR_CODE_NAME_DIY_1 = "diy1";
-    public static final String IR_CODE_NAME_DIY_2 = "diy2";
-    public static final String IR_CODE_NAME_DIY_3 = "diy3";
-    public static final String IR_CODE_NAME_DIY_4 = "diy4";
-    public static final String IR_CODE_NAME_DIY_5 = "diy5";
-    public static final String IR_CODE_NAME_DIY_6 = "diy6";
-    public static final String IR_CODE_NAME_RED_0 = "red0";
-    public static final String IR_CODE_NAME_RED_1 = "red1";
-    public static final String IR_CODE_NAME_RED_2 = "red2";
-    public static final String IR_CODE_NAME_RED_3 = "red3";
-    public static final String IR_CODE_NAME_RED_4 = "red4";
-    public static final String IR_CODE_NAME_GREEN_0 = "green0";
-    public static final String IR_CODE_NAME_GREEN_1 = "green1";
-    public static final String IR_CODE_NAME_GREEN_2 = "green2";
-    public static final String IR_CODE_NAME_GREEN_3 = "green3";
-    public static final String IR_CODE_NAME_GREEN_4 = "green4";
-    public static final String IR_CODE_NAME_BLUE_0 = "blue0";
-    public static final String IR_CODE_NAME_BLUE_1 = "blue1";
-    public static final String IR_CODE_NAME_BLUE_2 = "blue2";
-    public static final String IR_CODE_NAME_BLUE_3 = "blue3";
-    public static final String IR_CODE_NAME_BLUE_4 = "blue4";
-    public static final String IR_CODE_NAME_WHITE_0 = "white0";
-    public static final String IR_CODE_NAME_WHITE_1 = "white1";
-    public static final String IR_CODE_NAME_WHITE_2 = "white2";
-    public static final String IR_CODE_NAME_WHITE_3 = "white3";
-    public static final String IR_CODE_NAME_WHITE_4 = "white4";
-
-
+    public static String[] LEDNAMES = {
+            "power",
+            "play",
+            "up",
+            "down",
+            "quick",
+            "slow",
+            "auto",
+            "flash",
+            "jump3",
+            "jump7",
+            "fade3",
+            "fade7",
+            "redUp",
+            "redDown",
+            "greenUp",
+            "greenDown",
+            "blueUp",
+            "blueDown",
+            "diy1",
+            "diy2",
+            "diy3",
+            "diy4",
+            "diy5",
+            "diy6",
+            "red0",
+            "red1",
+            "red2",
+            "red3",
+            "red4",
+            "green0",
+            "green1",
+            "green2",
+            "green3",
+            "green4",
+            "blue0",
+            "blue1",
+            "blue2",
+            "blue3",
+            "blue4",
+            "white0",
+            "white1",
+            "white2",
+            "white3",
+            "white4"
+    };
 }
