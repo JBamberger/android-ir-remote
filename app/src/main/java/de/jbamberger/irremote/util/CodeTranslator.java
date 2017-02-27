@@ -4,7 +4,7 @@ package de.jbamberger.irremote.util;
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-public abstract class CodeTranslationTool {
+abstract class CodeTranslator {
 
     private final int frequency;
     private final int[] initSequence;
@@ -20,7 +20,7 @@ public abstract class CodeTranslationTool {
      * @param zero         Sequence representing a binary zeri
      * @param one          Sequence representing a binary one
      */
-    public CodeTranslationTool(int[] initSequence, int[] endSequence, int[] zero, int[] one, int frequency) {
+    CodeTranslator(int[] initSequence, int[] endSequence, int[] zero, int[] one, int frequency) {
         this.initSequence = initSequence;
         this.endSequence = endSequence;
         this.zero = zero;
@@ -38,7 +38,7 @@ public abstract class CodeTranslationTool {
      * @param codeString code
      * @return on off sequence of the codeString
      */
-    abstract int[] getCode(String codeString);
+    public abstract int[] buildCode(String codeString);
 
     /**
      * This method injects the inverse of every byte into the array. {a, b} becomes {a, ~a. b, ~b}.

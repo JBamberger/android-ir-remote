@@ -11,20 +11,8 @@ import de.jbamberger.irremote.R;
  */
 
 public class PanasonicRemote extends Remote {
-    private final PanasonicTranslator translator;
 
     public PanasonicRemote(Context context) throws IOException {
-        super(context, R.raw.led_remote_44_key);
-        translator = new PanasonicTranslator();
-    }
-
-    @Override
-    int[] buildCode(String codeString) {
-        return translator.getCode(codeString);
-    }
-
-    @Override
-    int getFrequency() {
-        return translator.getFrequency();
+        super(context, R.raw.led_remote_44_key, new PanasonicTranslator());
     }
 }

@@ -14,7 +14,6 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import de.jbamberger.irremote.R;
-import de.jbamberger.irremote.service.RemoteNotificationService;
 
 /**
  * Created: 04.01.2016
@@ -64,7 +63,7 @@ public class LEDRemoteUIInflater {
                 RemoteViews button = new RemoteViews(context.getPackageName(), R.layout.button_notification);
                 Intent intent = new Intent();
                 intent.setAction(context.getString(R.string.intentfilter_send_code));
-                intent.putExtra(RemoteNotificationService.IR_CODE_NAME, codes[index]);
+                intent.putExtra(""/*FIXME: RemoteNotificationService.IR_CODE_NAME*/, codes[index]);
                 button.setOnClickPendingIntent(R.id.button_notification, PendingIntent.getBroadcast(context, index + 5, intent, PendingIntent.FLAG_UPDATE_CURRENT));
 
                 button.setInt(R.id.button_notification, "setColorFilter", colors[index]);
@@ -120,7 +119,7 @@ public class LEDRemoteUIInflater {
                     public void onClick(View v) {
                         Intent intent = new Intent();
                         intent.setAction(context.getString(R.string.intentfilter_send_code));
-                        intent.putExtra(RemoteNotificationService.IR_CODE_NAME, code);
+                        intent.putExtra(""/*FIXME: RemoteNotificationService.IR_CODE_NAME*/, code);
                         context.sendBroadcast(intent);
                     }
                 });

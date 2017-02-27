@@ -15,7 +15,7 @@ import de.jbamberger.irremote.service.IRSenderService;
  */
 
 public class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.ItemViewHolder> {
-    private final String[] mItems = IRSenderService.PANNAMES;
+    private final String[] mItems = {};//FIXME: add items
     private final Context mContext;
 
     public BaseAdapter(Context context) {
@@ -34,7 +34,7 @@ public class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.ItemViewHolder
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IRSenderService.startActionSendIrcode(mContext, holder.getAdapterPosition());
+                IRSenderService.startActionSendIrcode(mContext, 0, "");//FIXME: holder.getAdapterPosition());
             }
         });
 

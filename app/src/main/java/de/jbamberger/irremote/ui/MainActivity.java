@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         if (mService != null) {
             Message msg = new Message();
             msg.what = RemoteNotificationService.COM_SEND_CODE;
-            msg.arg1 = RemoteNotificationService.IR_CODE_POWER;
+            msg.arg1 = 0;//FIXME: RemoteNotificationService.IR_CODE_POWER;
             try {
                 mService.send(msg);
 
