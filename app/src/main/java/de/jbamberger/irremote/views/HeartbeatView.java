@@ -73,7 +73,7 @@ public class HeartbeatView extends View {
         if (flash < 10 || (flash > 20 && flash < 30)) {
             paint.setStrokeWidth(16);
             paint.setColor(Color.RED);
-            //7paint.setShadowLayer(12, 0, 0, Color.RED);
+            //paint.setShadowLayer(12, 0, 0, Color.RED);
         } else {
             paint.setStrokeWidth(10);
             paint.setColor(Color.GREEN);

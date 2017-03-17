@@ -1,27 +1,29 @@
 package de.jbamberger.irremote.ui;
 
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.TableLayout;
+import android.widget.LinearLayout;
 
 import de.jbamberger.irremote.R;
-import de.jbamberger.irremote.service.RemoteNotificationService;
-import de.jbamberger.irremote.util.LEDRemoteUIInflater;
+import de.jbamberger.irremote.views.HeartbeatView;
 
 
 public class MainActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.view_test);
+        //PathAnim pa = new PathAnim(this);
+        HeartbeatView pa = new HeartbeatView(getApplicationContext());
+
+        LinearLayout layout = (LinearLayout) findViewById(R.id.content);
+        layout.addView(pa);
 
 
+    }
+
+    /*
     private static final String TAG = "MainActivity";
 
 
@@ -88,5 +90,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    } */
 }
