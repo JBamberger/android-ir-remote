@@ -97,7 +97,7 @@ abstract class CodeTranslator {
         return data;
     }
 
-    final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
 
     /**
      * encodes a byte sequence into a hex string.

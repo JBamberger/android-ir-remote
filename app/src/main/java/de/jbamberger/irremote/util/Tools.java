@@ -34,7 +34,7 @@ public class Tools {
         }*/
 
 
-        ArrayList code = new ArrayList();
+        ArrayList<Integer> code = new ArrayList<>();
         code.add(9000);
         code.add(4500);
         int ai[] = new int[4];
