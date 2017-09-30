@@ -1,13 +1,14 @@
-apply plugin: 'com.android.application'
+apply plugin: "com.android.application"
+apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
         applicationId "de.jbapps.ledirremote"
         minSdkVersion 24
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
 
@@ -15,19 +16,30 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+    dataBinding {
+        enabled = true
+    }
     compileOptions {
-        targetCompatibility 1.7
-        sourceCompatibility 1.7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    packagingOptions {
+        pickFirst 'META-INF/ASL2.0'
+        pickFirst 'META-INF/LICENSE'
+        pickFirst 'META-INF/NOTICE'
+        pickFirst 'META-INF/LICENSE.txt'
+        pickFirst 'META-INF/NOTICE.txt'
+        pickFirst 'META-INF/DEPENDENCIES'
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.android.support:support-v4:25.2.0'
-    compile 'com.android.support:recyclerview-v7:25.2.0'
-    compile 'com.android.support:design:25.2.0'
+    compile fileTree(dir: "libs", include: ["*.jar"])
+    compile "com.android.support:appcompat-v7:$support_version"
+    compile "com.android.support:support-v4:$support_version"
+    compile "com.android.support:recyclerview-v7:$support_version"
+    compile "com.android.support:design:$support_version"
 }
