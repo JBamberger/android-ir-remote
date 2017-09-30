@@ -6,7 +6,7 @@ android {
     buildToolsVersion "26.0.2"
 
     defaultConfig {
-        applicationId "de.jbapps.ledirremote"
+        applicationId "de.jbamberger.ledirremote"
         minSdkVersion 24
         targetSdkVersion 26
         versionCode 1
