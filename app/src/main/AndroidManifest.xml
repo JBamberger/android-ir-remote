@@ -34,7 +34,7 @@
 
         <!--
         receiver
-            android:name=".AutostartReceiver"
+            android:name=".AutoStartReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>

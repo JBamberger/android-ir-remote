@@ -1,6 +1,6 @@
 # ir-led-remote
 
-Just some code to control cheap chinese rgb led stripes. There is some code hidden which can be used to replace any ir remote control. It may be necessary to reverse engineer the ir codes of the remote. I've used an arduino with an IR Receiver and the following lib: [IRLib](https://github.com/cyborg5/IRLib/)
+Just some code to control cheap chinese rgb led stripes. There is some code hidden which can be used to replace any ir remote control. It may be necessary to reverse engineer the ir codes of the remote. I've used an Arduino with an IR Receiver and the following lib: [IRLib](https://github.com/cyborg5/IRLib/)
 
 ```
 #include <IRLib.h>

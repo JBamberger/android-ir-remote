@@ -33,7 +33,7 @@ public class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.ItemViewHolder
     public void onBindViewHolder(final ItemViewHolder holder, final int position) {
         holder.textView.setText(mItems[position]);
         holder.textView.setOnClickListener(v -> {
-            IRSenderService.startActionSendIrcode(mContext, Remotes.LED_REMOTE_44_KEY, "");//FIXME: holder.getAdapterPosition());
+            IRSenderService.startActionSendIrCode(mContext, Remotes.LED_REMOTE_44_KEY, "");//FIXME: holder.getAdapterPosition());
         });
 
     }

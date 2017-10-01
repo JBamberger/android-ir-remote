@@ -5,7 +5,7 @@ import android.content.Intent;
 
 import java.util.ArrayList;
 
-import de.jbamberger.irremote.R;
+import static de.jbamberger.irremote.service.RemoteNotificationService.ACTION_SEND_IR;
 
 /**
  * Created: 04.01.2016
@@ -17,7 +17,7 @@ public class IrTools {
 
     public static Intent generateIRSenderIntent(Context context, int code) {
         Intent intent = new Intent();
-        intent.setAction(context.getString(R.string.intentfilter_send_code));
+        intent.setAction(ACTION_SEND_IR);
         intent.putExtra("" /*FIXME: use name..*/, code);
         return intent;
     }

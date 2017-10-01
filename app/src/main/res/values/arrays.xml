@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <array name="noti_keys">
+    <array name="notification_keys">
         <item>24</item>
         <item>25</item>
         <item>26</item>
@@ -23,7 +23,7 @@
         <item>42</item>
         <item>43</item>
     </array>
-    <array name="noti_value">
+    <array name="notification_value">
         <item>red0</item>
         <item>red1</item>
         <item>red2</item>
@@ -46,7 +46,7 @@
         <item>white4</item>
     </array>
 
-    <array name="noti_colors">
+    <array name="notification_colors">
         <item>@color/red0</item>
         <item>@color/red1</item>
         <item>@color/red2</item>
@@ -69,7 +69,7 @@
         <item>@color/white4</item>
     </array>
 
-    <string-array name="noti_images">
+    <string-array name="notification_images">
         <item>@drawable/ic_action_power</item>
         <item>@drawable/ic_image_color_lens</item>
         <item>@drawable/ic_image_color_lens</item>

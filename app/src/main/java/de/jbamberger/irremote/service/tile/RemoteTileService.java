@@ -13,6 +13,6 @@ public class RemoteTileService extends TileService {
     public void onClick() {
         super.onClick();
 
-        IRSenderService.startActionSendIrcode(this, LED_REMOTE_44_KEY, "power"); //FIXME: use correct ir code
+        IRSenderService.startActionSendIrCode(this, LED_REMOTE_44_KEY, "power"); //FIXME: use correct ir code
     }
 }

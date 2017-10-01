@@ -14,6 +14,8 @@ import android.widget.TableRow;
 
 import de.jbamberger.irremote.R;
 
+import static de.jbamberger.irremote.service.RemoteNotificationService.ACTION_SEND_IR;
+
 /**
  * Created: 04.01.2016
  *
@@ -28,9 +30,9 @@ public class LEDRemoteUIInflater {
 
 
     public void generateLargeNotificationLayout(Context context, RemoteViews root) {
-        String[] names = context.getResources().getStringArray(R.array.noti_value);
-        int[] codes = context.getResources().getIntArray(R.array.noti_keys);
-        int[] colors = context.getResources().getIntArray(R.array.noti_colors);
+        String[] names = context.getResources().getStringArray(R.array.notification_value);
+        int[] codes = context.getResources().getIntArray(R.array.notification_keys);
+        int[] colors = context.getResources().getIntArray(R.array.notification_colors);
 
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -61,7 +63,7 @@ public class LEDRemoteUIInflater {
 
                 RemoteViews button = new RemoteViews(context.getPackageName(), R.layout.button_notification);
                 Intent intent = new Intent();
-                intent.setAction(context.getString(R.string.intentfilter_send_code));
+                intent.setAction(ACTION_SEND_IR);
                 intent.putExtra(""/*FIXME: RemoteNotificationService.IR_CODE_NAME*/, codes[index]);
                 button.setOnClickPendingIntent(R.id.button_notification, PendingIntent.getBroadcast(context, index + 5, intent, PendingIntent.FLAG_UPDATE_CURRENT));
 
@@ -73,10 +75,10 @@ public class LEDRemoteUIInflater {
     }
 
     public void inflateRemoteControlUI(final Context context, ViewGroup container) {
-        String[] names = context.getResources().getStringArray(R.array.noti_value);
-        int[] codes = context.getResources().getIntArray(R.array.noti_keys);
-        int[] colors = context.getResources().getIntArray(R.array.noti_colors);
-        TypedArray images = context.getResources().obtainTypedArray(R.array.noti_images);
+        String[] names = context.getResources().getStringArray(R.array.notification_value);
+        int[] codes = context.getResources().getIntArray(R.array.notification_keys);
+        int[] colors = context.getResources().getIntArray(R.array.notification_colors);
+        TypedArray images = context.getResources().obtainTypedArray(R.array.notification_images);
         inflateRemoteControlUI(context, container, names, codes, colors, images);
         images.recycle();
     }
@@ -85,7 +87,7 @@ public class LEDRemoteUIInflater {
         if (!(container instanceof TableLayout)) {
             throw new IllegalArgumentException("container must be of type TableLayout");
         }
-        if(names.length != codes.length) {
+        if (names.length != codes.length) {
             throw new IllegalArgumentException("names and codes must have equal length");
         }
         int columns = names.length / gridWidth;
@@ -115,7 +117,7 @@ public class LEDRemoteUIInflater {
                 ImageButton button = (ImageButton) inflater.inflate(R.layout.button_notification, row, false);
                 button.setOnClickListener(v -> {
                     Intent intent = new Intent();
-                    intent.setAction(context.getString(R.string.intentfilter_send_code));
+                    intent.setAction(ACTION_SEND_IR);
                     intent.putExtra(""/*FIXME: RemoteNotificationService.IR_CODE_NAME*/, code);
                     context.sendBroadcast(intent);
                 });

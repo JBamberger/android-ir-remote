@@ -17,7 +17,7 @@ abstract class CodeTranslator {
      *
      * @param initSequence Sequence transmitted only once in the beginning
      * @param endSequence  Sequence transmitted only once in the end
-     * @param zero         Sequence representing a binary zeri
+     * @param zero         Sequence representing a binary zero
      * @param one          Sequence representing a binary one
      */
     CodeTranslator(int[] initSequence, int[] endSequence, int[] zero, int[] one, int frequency) {

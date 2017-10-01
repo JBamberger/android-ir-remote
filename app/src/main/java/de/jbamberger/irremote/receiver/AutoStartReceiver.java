@@ -6,8 +6,8 @@ import android.content.Intent;
 
 import de.jbamberger.irremote.service.RemoteNotificationService;
 
-public class AutostartReceiver extends BroadcastReceiver {
-    public AutostartReceiver() {
+public class AutoStartReceiver extends BroadcastReceiver {
+    public AutoStartReceiver() {
     }
 
     @Override

@@ -15,7 +15,7 @@ import timber.log.Timber;
 
 public class IRSenderService extends IntentService {
 
-    private static final String ACTION_SEND_IRCODE = "de.jbamberger.irremote.service.action.SEND_IRCODE";
+    private static final String ACTION_SEND_IR_CODE = "de.jbamberger.irremote.service.action.SEND_IR_CODE";
 
     private static final String EXTRA_COMMAND_NAME = "de.jbamberger.irremote.service.extra.EXTRA_COMMAND_NAME";
     private static final String EXTRA_REMOTE_TYPE = "de.jbamberger.irremote.service.extra.EXTRA_REMOTE_TYPE";
@@ -34,9 +34,9 @@ public class IRSenderService extends IntentService {
         mIRManager = (ConsumerIrManager) getSystemService(CONSUMER_IR_SERVICE);
     }
 
-    public static void startActionSendIrcode(Context context, @Remotes.RemoteType int remoteType, String commandName) {
+    public static void startActionSendIrCode(Context context, @Remotes.RemoteType int remoteType, String commandName) {
         Intent intent = new Intent(context, IRSenderService.class);
-        intent.setAction(ACTION_SEND_IRCODE);
+        intent.setAction(ACTION_SEND_IR_CODE);
         intent.putExtra(EXTRA_COMMAND_NAME, remoteType);
         intent.putExtra(EXTRA_REMOTE_TYPE, commandName);
         context.startService(intent);
@@ -46,25 +46,25 @@ public class IRSenderService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
-            if (ACTION_SEND_IRCODE.equals(action)) {
+            if (ACTION_SEND_IR_CODE.equals(action)) {
                 final int remoteType = intent.getIntExtra(EXTRA_COMMAND_NAME, 0);
                 final String commandName = intent.getStringExtra(EXTRA_REMOTE_TYPE);
-                handleActionSendIrcode(remoteType, commandName);
+                handleActionSendIrCode(remoteType, commandName);
             }
         }
     }
 
 
-    private void handleActionSendIrcode(@Remotes.RemoteType int remotetype, String name) {
-        Remote remote = remotes.get(remotetype);
+    private void handleActionSendIrCode(@Remotes.RemoteType int remoteType, String name) {
+        Remote remote = remotes.get(remoteType);
         if (remote == null) {
             try {
-                remote = Remotes.getRemoteFromType(getApplicationContext(), remotetype);
+                remote = Remotes.getRemoteFromType(getApplicationContext(), remoteType);
             } catch (IOException e) {
                 Timber.e(e,"IO Error while reading remote code.");
                 return;
             }
-            remotes.put(remotetype, remote);
+            remotes.put(remoteType, remote);
         }
 
         int[] code = remote.getIRSequence(name);
