@@ -16,7 +16,7 @@ import android.widget.RemoteViews;
 
 import de.jbamberger.irremote.R;
 import de.jbamberger.irremote.service.ir.IRSenderService;
-import de.jbamberger.irremote.util.Tools;
+import de.jbamberger.irremote.service.ir.IrTools;
 import timber.log.Timber;
 
 import static de.jbamberger.irremote.service.ir.Remotes.LED_REMOTE_44_KEY;
@@ -107,7 +107,7 @@ public class RemoteNotificationService extends Service {
         //notification.bigContentView = layoutBig;
         for (int[] i : intents) {
             layout.setOnClickPendingIntent(i[0], PendingIntent.getBroadcast(this, i[0],
-                    Tools.generateIRSenderIntent(getApplicationContext(), i[1]),
+                    IrTools.generateIRSenderIntent(getApplicationContext(), i[1]),
                     PendingIntent.FLAG_UPDATE_CURRENT));
         }
         this.startForeground(101, notification);

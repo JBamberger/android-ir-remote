@@ -1,4 +1,4 @@
-package de.jbamberger.irremote.util;
+package de.jbamberger.irremote.service.ir;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +13,7 @@ import de.jbamberger.irremote.R;
  * @author Jannik
  * @version 04.01.2016
  */
-public class Tools {
+public class IrTools {
 
     public static Intent generateIRSenderIntent(Context context, int code) {
         Intent intent = new Intent();

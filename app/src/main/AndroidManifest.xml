@@ -32,8 +32,6 @@
             android:label="@string/service_name_control"
             android:process=":control_service" />
 
-        <activity android:name=".ui.NotificationSettingsActivity" />
-
         <!--
         receiver
             android:name=".AutostartReceiver"
@@ -54,17 +52,6 @@
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
         </service>
-
-        <activity
-            android:name="de.jbamberger.irremote.ui.TestActivity"
-            android:label="@string/title_activity_test"
-            android:theme="@style/AppTheme.NoActionBar">
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
-        </activity>
 
         <service
             android:name="de.jbamberger.irremote.service.ir.IRSenderService"

@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import de.jbamberger.irremote.R;
 import de.jbamberger.irremote.service.ir.IRSenderService;
+import de.jbamberger.irremote.service.ir.Remotes;
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
@@ -31,11 +32,8 @@ public class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.ItemViewHolder
     @Override
     public void onBindViewHolder(final ItemViewHolder holder, final int position) {
         holder.textView.setText(mItems[position]);
-        holder.textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IRSenderService.startActionSendIrcode(mContext, 0, "");//FIXME: holder.getAdapterPosition());
-            }
+        holder.textView.setOnClickListener(v -> {
+            IRSenderService.startActionSendIrcode(mContext, Remotes.LED_REMOTE_44_KEY, "");//FIXME: holder.getAdapterPosition());
         });
 
     }
@@ -51,7 +49,7 @@ public class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.ItemViewHolder
 
         public ItemViewHolder(View itemView) {
             super(itemView);
-            textView = (TextView) itemView.findViewById(R.id.text);
+            textView = itemView.findViewById(R.id.text);
         }
 
     }

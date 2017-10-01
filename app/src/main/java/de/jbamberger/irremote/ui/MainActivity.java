@@ -5,13 +5,10 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.Message;
 import android.os.Messenger;
-import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TableLayout;
 
 import de.jbamberger.irremote.R;
@@ -20,19 +17,6 @@ import de.jbamberger.irremote.util.LEDRemoteUIInflater;
 
 
 public class MainActivity extends AppCompatActivity {
-    /*@Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.view_test);
-        //PathAnim pa = new PathAnim(this);
-        HeartbeatView pa = new HeartbeatView(getApplicationContext());
-
-        LinearLayout layout = (LinearLayout) findViewById(R.id.content);
-        layout.addView(pa);
-
-
-    }*/
-
 
     Messenger mService;
     ServiceConnection serviceConnection = new ServiceConnection() {
@@ -53,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         Intent startService = new Intent(this, RemoteNotificationService.class);
         startService(startService);
         bindService(startService, serviceConnection, BIND_AUTO_CREATE);
@@ -61,24 +44,6 @@ public class MainActivity extends AppCompatActivity {
         TableLayout layout = findViewById(R.id.main_layout);
         LEDRemoteUIInflater inf = new LEDRemoteUIInflater();
         inf.inflateRemoteControlUI(this, layout);
-
-
-    }
-
-    public void send(View v) {
-        //ControlNotification.notify(this, "examplestring", 666);
-        if (mService != null) {
-            Message msg = new Message();
-            msg.what = RemoteNotificationService.COM_SEND_CODE;
-            msg.arg1 = 0;//FIXME: RemoteNotificationService.IR_CODE_POWER;
-            try {
-                mService.send(msg);
-
-
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override

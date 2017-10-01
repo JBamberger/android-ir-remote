@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.RemoteViews;
@@ -114,14 +113,11 @@ public class LEDRemoteUIInflater {
                 }
                 final int code = codes[index];
                 ImageButton button = (ImageButton) inflater.inflate(R.layout.button_notification, row, false);
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent();
-                        intent.setAction(context.getString(R.string.intentfilter_send_code));
-                        intent.putExtra(""/*FIXME: RemoteNotificationService.IR_CODE_NAME*/, code);
-                        context.sendBroadcast(intent);
-                    }
+                button.setOnClickListener(v -> {
+                    Intent intent = new Intent();
+                    intent.setAction(context.getString(R.string.intentfilter_send_code));
+                    intent.putExtra(""/*FIXME: RemoteNotificationService.IR_CODE_NAME*/, code);
+                    context.sendBroadcast(intent);
                 });
                 button.setImageResource(images.getResourceId(index, R.drawable.ic_action_play));
                 button.setColorFilter(colors[index]);
