@@ -60,7 +60,7 @@ public class IrTools {
         code.add(560);
         int[] arr = new int[code.size()];
         for (int k = 0; k < code.size(); k++) {
-            arr[k] = (Integer) code.get(k);
+            arr[k] = code.get(k);
         }
 
         return arr;
