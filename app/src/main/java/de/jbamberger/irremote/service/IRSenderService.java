@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.hardware.ConsumerIrManager;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.lang.annotation.Retention;
@@ -17,6 +16,7 @@ import java.util.TreeMap;
 import de.jbamberger.irremote.util.LEDRemote44Key;
 import de.jbamberger.irremote.util.PanasonicRemote;
 import de.jbamberger.irremote.util.Remote;
+import timber.log.Timber;
 
 public class IRSenderService extends IntentService {
 
@@ -48,7 +48,7 @@ public class IRSenderService extends IntentService {
         mIRManager = (ConsumerIrManager) getSystemService(CONSUMER_IR_SERVICE);
     }
 
-    public static void startActionSendIrcode(Context context, int remoteType, String commandName) {
+    public static void startActionSendIrcode(Context context, @RemoteType int remoteType, String commandName) {
         Intent intent = new Intent(context, IRSenderService.class);
         intent.setAction(ACTION_SEND_IRCODE);
         intent.putExtra(EXTRA_COMMAND_NAME, remoteType);
@@ -81,12 +81,12 @@ public class IRSenderService extends IntentService {
                         remote = new PanasonicRemote(getApplicationContext());
                         break;
                     default:
-                        Toast.makeText(getApplicationContext(), "Invalid Remote type.", Toast.LENGTH_LONG).show();
+                        Timber.d("Invalid Remote type.");
                         return;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(), "IO Error while reading remote code.", Toast.LENGTH_LONG).show();
+                Timber.d("IO Error while reading remote code.");
                 return;
             }
             remotes.put(remotetype, remote);
@@ -96,7 +96,7 @@ public class IRSenderService extends IntentService {
         if (code != null) {
             send(remote.getFrequency(), code);
         } else {
-            Toast.makeText(getApplicationContext(), "The selected remote doesn't support this command.", Toast.LENGTH_LONG).show();
+            Timber.d("The selected remote doesn't support this command.");
         }
     }
 
@@ -109,9 +109,9 @@ public class IRSenderService extends IntentService {
                     return;
                 }
             }
-            Toast.makeText(this, "The required frequency range is not supported.", Toast.LENGTH_LONG).show();
+            Timber.d("The required frequency range is not supported.");
         } else {
-            Toast.makeText(this, "An error occurred while transmitting.", Toast.LENGTH_LONG).show();// TODO: 16.02.2017 replace with res
+            Timber.d("An error occurred while transmitting.");// TODO: 16.02.2017 replace with res
         }
     }
 }

@@ -7,47 +7,48 @@
     android:rowCount="10">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:columnCount="4"
+        android:orientation="horizontal"
         android:rowCount="1">
 
         <Button
-            android:layout_weight="1"
             android:id="@+id/brightness_up"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="up" />
 
         <Button
-            android:layout_weight="1"
             android:id="@+id/brightness_down"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="down" />
 
         <Button
-            android:layout_weight="1"
             android:id="@+id/play"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="play" />
 
         <Button
-            android:layout_weight="1"
             android:id="@+id/power"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="power" />
 
     </LinearLayout>
+
     <GridLayout
-        android:orientation="vertical"
         android:id="@+id/colors"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:columnCount="4"
+        android:orientation="vertical"
         android:rowCount="5">
 
         <Button
@@ -172,9 +173,6 @@
 
 
     </GridLayout>
-
-
-
 
 
     <Button

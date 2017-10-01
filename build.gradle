@@ -25,4 +25,5 @@ allprojects {
 
 ext {
     support_version = '26.1.0'
+    timber_version = "4.5.1"
 }

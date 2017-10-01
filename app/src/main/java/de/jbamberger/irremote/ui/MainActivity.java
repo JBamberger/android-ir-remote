@@ -1,16 +1,26 @@
 package de.jbamberger.irremote.ui;
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.LinearLayout;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TableLayout;
 
 import de.jbamberger.irremote.R;
-import de.jbamberger.irremote.views.HeartbeatView;
+import de.jbamberger.irremote.service.RemoteNotificationService;
+import de.jbamberger.irremote.util.LEDRemoteUIInflater;
 
 
 public class MainActivity extends AppCompatActivity {
-    @Override
+    /*@Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_test);
@@ -21,10 +31,7 @@ public class MainActivity extends AppCompatActivity {
         layout.addView(pa);
 
 
-    }
-
-    /*
-    private static final String TAG = "MainActivity";
+    }*/
 
 
     Messenger mService;
@@ -51,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         startService(startService);
         bindService(startService, serviceConnection, BIND_AUTO_CREATE);
 
-        TableLayout layout = (TableLayout) findViewById(R.id.main_layout);
+        TableLayout layout = findViewById(R.id.main_layout);
         LEDRemoteUIInflater inf = new LEDRemoteUIInflater();
         inf.inflateRemoteControlUI(this, layout);
 
@@ -59,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void send(View v) {
-        ControlNotification.notify(this, "examplestring", 666);
+        //ControlNotification.notify(this, "examplestring", 666);
         if (mService != null) {
             Message msg = new Message();
             msg.what = RemoteNotificationService.COM_SEND_CODE;
@@ -90,5 +97,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    } */
+    }
 }

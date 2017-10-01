@@ -12,16 +12,14 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import de.jbamberger.irremote.R;
 import de.jbamberger.irremote.util.Tools;
+import timber.log.Timber;
 
 
 public class RemoteNotificationService extends Service {
-
-    private static final String TAG = "REMOTESERVICE";
 
     public static final int COM_SEND_CODE = 5;
 
@@ -41,11 +39,11 @@ public class RemoteNotificationService extends Service {
     private class IncomingHandler extends android.os.Handler {
         @Override
         public void handleMessage(Message msg) {
-            Log.d(TAG, "message incoming: " + msg.what);
+            Timber.d("message incoming: " + msg.what);
             switch (msg.what) {
                 case COM_SEND_CODE:
-                    Log.d(TAG, "Received " + msg.arg1);
-                    IRSenderService.startActionSendIrcode(getApplicationContext(), 0, "");//FIXME: msg.arg1);
+                    Timber.d("Received " + msg.arg1);
+                    IRSenderService.startActionSendIrcode(getApplicationContext(), IRSenderService.LED_REMOTE_44_KEY, "");//FIXME: msg.arg1);
 
                 default:
                     super.handleMessage(msg);
@@ -61,22 +59,22 @@ public class RemoteNotificationService extends Service {
 
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.d(TAG, "Received message");
+                Timber.d("Received message");
                 int code = intent.getIntExtra("ir_code_name" /*FIXME: IR_CODE_NAME*/, -100);
-                Log.d(TAG, "Code: " + code);
-                IRSenderService.startActionSendIrcode(getApplicationContext(), 0, "");//FIXME: code);
+                Timber.d("Code: " + code);
+                IRSenderService.startActionSendIrcode(getApplicationContext(), IRSenderService.LED_REMOTE_44_KEY, "");//FIXME: code);
             }
         };
         IntentFilter intentFilter = new IntentFilter(getString(R.string.intentfilter_send_code));
         registerReceiver(mReceiver, intentFilter);
-        Log.d(TAG, "Receiver registered.");
+        Timber.d("Receiver registered.");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         unregisterReceiver(mReceiver);
-        Log.d(TAG, "Receiver unregistered.");
+        Timber.d("Receiver unregistered.");
     }
 
     private void setForegroundPriority() {
@@ -110,7 +108,7 @@ public class RemoteNotificationService extends Service {
                     PendingIntent.FLAG_UPDATE_CURRENT));
         }
         this.startForeground(101, notification);
-        Log.i("SERVICE", "Started with foreground priority");
+        Timber.i("Started with foreground priority");
     }
 
 
