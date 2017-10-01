@@ -1,4 +1,4 @@
-package de.jbamberger.irremote.util;
+package de.jbamberger.irremote.service.ir;
 
 import android.content.Context;
 
@@ -10,9 +10,9 @@ import de.jbamberger.irremote.R;
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-public class LEDRemote44Key extends Remote {
+class LEDRemote44Key extends Remote {
 
-    public LEDRemote44Key(Context context) throws IOException{
+    LEDRemote44Key(Context context) throws IOException{
         super(context, R.raw.led_remote_44_key, new NECTranslator());
     }
 }

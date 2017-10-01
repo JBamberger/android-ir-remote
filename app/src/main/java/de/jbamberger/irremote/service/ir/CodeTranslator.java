@@ -1,4 +1,4 @@
-package de.jbamberger.irremote.util;
+package de.jbamberger.irremote.service.ir;
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
@@ -28,7 +28,7 @@ abstract class CodeTranslator {
         this.frequency = frequency;
     }
 
-    public int getFrequency() {
+    int getFrequency() {
         return frequency;
     }
 

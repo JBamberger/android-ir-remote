@@ -1,33 +1,21 @@
-package de.jbamberger.irremote.service;
+package de.jbamberger.irremote.service.ir;
 
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.ConsumerIrManager;
-import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 
 import java.io.IOException;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.util.Map;
 import java.util.TreeMap;
 
-import de.jbamberger.irremote.util.LEDRemote44Key;
-import de.jbamberger.irremote.util.PanasonicRemote;
-import de.jbamberger.irremote.util.Remote;
 import timber.log.Timber;
 
+import static de.jbamberger.irremote.service.ir.Types.LED_REMOTE_44_KEY;
+import static de.jbamberger.irremote.service.ir.Types.PANASONIC_REMOTE;
+
 public class IRSenderService extends IntentService {
-
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({LED_REMOTE_44_KEY, PANASONIC_REMOTE})
-    public @interface RemoteType {
-    }
-
-
-    public static final int LED_REMOTE_44_KEY = 0;
-    public static final int PANASONIC_REMOTE = 1;
 
     private static final String ACTION_SEND_IRCODE = "de.jbamberger.irremote.service.action.SEND_IRCODE";
 
@@ -48,7 +36,7 @@ public class IRSenderService extends IntentService {
         mIRManager = (ConsumerIrManager) getSystemService(CONSUMER_IR_SERVICE);
     }
 
-    public static void startActionSendIrcode(Context context, @RemoteType int remoteType, String commandName) {
+    public static void startActionSendIrcode(Context context, @Types.RemoteType int remoteType, String commandName) {
         Intent intent = new Intent(context, IRSenderService.class);
         intent.setAction(ACTION_SEND_IRCODE);
         intent.putExtra(EXTRA_COMMAND_NAME, remoteType);
@@ -85,8 +73,7 @@ public class IRSenderService extends IntentService {
                         return;
                 }
             } catch (IOException e) {
-                e.printStackTrace();
-                Timber.d("IO Error while reading remote code.");
+                Timber.e(e,"IO Error while reading remote code.");
                 return;
             }
             remotes.put(remotetype, remote);

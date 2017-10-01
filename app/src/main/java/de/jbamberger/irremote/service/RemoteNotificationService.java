@@ -15,8 +15,11 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
 import de.jbamberger.irremote.R;
+import de.jbamberger.irremote.service.ir.IRSenderService;
 import de.jbamberger.irremote.util.Tools;
 import timber.log.Timber;
+
+import static de.jbamberger.irremote.service.ir.Types.LED_REMOTE_44_KEY;
 
 
 public class RemoteNotificationService extends Service {
@@ -43,7 +46,7 @@ public class RemoteNotificationService extends Service {
             switch (msg.what) {
                 case COM_SEND_CODE:
                     Timber.d("Received " + msg.arg1);
-                    IRSenderService.startActionSendIrcode(getApplicationContext(), IRSenderService.LED_REMOTE_44_KEY, "");//FIXME: msg.arg1);
+                    IRSenderService.startActionSendIrcode(getApplicationContext(), LED_REMOTE_44_KEY, "");//FIXME: msg.arg1);
 
                 default:
                     super.handleMessage(msg);
@@ -62,7 +65,7 @@ public class RemoteNotificationService extends Service {
                 Timber.d("Received message");
                 int code = intent.getIntExtra("ir_code_name" /*FIXME: IR_CODE_NAME*/, -100);
                 Timber.d("Code: " + code);
-                IRSenderService.startActionSendIrcode(getApplicationContext(), IRSenderService.LED_REMOTE_44_KEY, "");//FIXME: code);
+                IRSenderService.startActionSendIrcode(getApplicationContext(), LED_REMOTE_44_KEY, "");//FIXME: code);
             }
         };
         IntentFilter intentFilter = new IntentFilter(getString(R.string.intentfilter_send_code));

@@ -1,4 +1,4 @@
-package de.jbamberger.irremote.util;
+package de.jbamberger.irremote.service.ir;
 
 import android.content.Context;
 
@@ -10,9 +10,9 @@ import de.jbamberger.irremote.R;
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-public class PanasonicRemote extends Remote {
+class PanasonicRemote extends Remote {
 
-    public PanasonicRemote(Context context) throws IOException {
+    PanasonicRemote(Context context) throws IOException {
         super(context, R.raw.led_remote_44_key, new PanasonicTranslator());
     }
 }

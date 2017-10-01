@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import de.jbamberger.irremote.R;
-import de.jbamberger.irremote.service.IRSenderService;
+import de.jbamberger.irremote.service.ir.IRSenderService;
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)

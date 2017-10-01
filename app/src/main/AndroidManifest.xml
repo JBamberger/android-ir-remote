@@ -69,7 +69,7 @@
         </activity>
 
         <service
-            android:name="de.jbamberger.irremote.service.IRSenderService"
+            android:name="de.jbamberger.irremote.service.ir.IRSenderService"
             android:exported="false" />
     </application>
 

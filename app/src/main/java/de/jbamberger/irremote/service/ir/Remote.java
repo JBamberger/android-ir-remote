@@ -1,4 +1,4 @@
-package de.jbamberger.irremote.util;
+package de.jbamberger.irremote.service.ir;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -16,12 +16,12 @@ import java.util.TreeMap;
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-public abstract class Remote {
+abstract class Remote {
 
     private final Map<String, int[]> codes = new TreeMap<>();
     private final CodeTranslator translator;
 
-    public Remote(Context context, int resId, CodeTranslator translator) throws IOException {
+    Remote(Context context, int resId, CodeTranslator translator) throws IOException {
         this.translator = translator;
         List<String> codeList = readRemoteFile(context, resId);
 
@@ -36,11 +36,10 @@ public abstract class Remote {
     }
 
 
-    public int getFrequency() {
+    int getFrequency() {
         return translator.getFrequency();
     }
 
-    public
     @Nullable
     int[] getIRSequence(String name) {
         return codes.get(name);
@@ -50,7 +49,7 @@ public abstract class Remote {
         return codes.keySet();
     }
 
-    public int[] buildCode(String codeString) throws IOException {
+    private int[] buildCode(String codeString) throws IOException {
         return translator.buildCode(codeString);
     }
 
