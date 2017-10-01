@@ -6,10 +6,6 @@
     <color name="button_border_focused">@color/material_green_A400</color>
     <color name="button_border_pressed">@color/material_green_A700</color>
 
-    <!-- Red -->
-
-    <!-- Light Green -->
-
     <color name="red0">#F44336</color>
     <color name="red1">#EF5350</color>
     <color name="red2">#D84315</color>
@@ -38,35 +34,6 @@
     <color name="material_green_A200">#69F0AE</color>
     <color name="material_green_A400">#00E676</color>
     <color name="material_green_A700">#00C853</color>
-
-    <!-- Blue -->
-
-    <!-- Grey -->
-    <color name="material_grey_50">#FAFAFA</color>
-    <color name="material_grey_100">#F5F5F5</color>
     <color name="material_grey_200">#EEEEEE</color>
-    <color name="material_grey_300">#E0E0E0</color>
-    <color name="material_grey_600">#757575</color>
-    <color name="material_grey_800">#424242</color>
-    <color name="material_grey_900">#212121</color>
 
-    <!-- Blue Grey -->
-    <color name="material_blue_grey_800">#37474F</color>
-    <color name="material_blue_grey_900">#263238</color>
-
-
-
-    <!-- Black -->
-    <!-- Text -->
-    <!-- Secondary Text/Icons -->
-    <!-- Disabled/Hint Text -->
-    <!-- Dividers -->
-
-    <!-- White -->
-    <!-- Text/Icons -->
-    <!-- Secondary Text -->
-    <!-- Disabled/Hint Text -->
-    <!-- Dividers -->
-
-    <!-- Transparent -->
 </resources>
