@@ -16,7 +16,7 @@ import java.util.TreeMap;
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-abstract class Remote {
+final class Remote {
 
     private final Map<String, int[]> codes = new TreeMap<>();
     private final CodeTranslator translator;
@@ -24,6 +24,19 @@ abstract class Remote {
     Remote(Context context, int resId, CodeTranslator translator) throws IOException {
         this.translator = translator;
         List<String> codeList = readRemoteFile(context, resId);
+
+        for (String code : codeList) {
+            String[] parts = code.split(":");
+            if (parts.length == 2) {
+                codes.put(parts[0], buildCode(parts[1]));
+            } else {
+                throw new IOException("Couldn't split code: \"" + code + "\" into two parts.");
+            }
+        }
+    }
+
+    Remote(List<String> codeList, CodeTranslator translator) throws IOException {
+        this.translator = translator;
 
         for (String code : codeList) {
             String[] parts = code.split(":");

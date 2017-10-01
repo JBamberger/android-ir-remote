@@ -12,8 +12,6 @@ import java.util.TreeMap;
 
 import timber.log.Timber;
 
-import static de.jbamberger.irremote.service.ir.Types.LED_REMOTE_44_KEY;
-import static de.jbamberger.irremote.service.ir.Types.PANASONIC_REMOTE;
 
 public class IRSenderService extends IntentService {
 
@@ -36,7 +34,7 @@ public class IRSenderService extends IntentService {
         mIRManager = (ConsumerIrManager) getSystemService(CONSUMER_IR_SERVICE);
     }
 
-    public static void startActionSendIrcode(Context context, @Types.RemoteType int remoteType, String commandName) {
+    public static void startActionSendIrcode(Context context, @Remotes.RemoteType int remoteType, String commandName) {
         Intent intent = new Intent(context, IRSenderService.class);
         intent.setAction(ACTION_SEND_IRCODE);
         intent.putExtra(EXTRA_COMMAND_NAME, remoteType);
@@ -57,21 +55,11 @@ public class IRSenderService extends IntentService {
     }
 
 
-    private void handleActionSendIrcode(int remotetype, String name) {
+    private void handleActionSendIrcode(@Remotes.RemoteType int remotetype, String name) {
         Remote remote = remotes.get(remotetype);
         if (remote == null) {
             try {
-                switch (remotetype) {
-                    case LED_REMOTE_44_KEY:
-                        remote = new LEDRemote44Key(getApplicationContext());
-                        break;
-                    case PANASONIC_REMOTE:
-                        remote = new PanasonicRemote(getApplicationContext());
-                        break;
-                    default:
-                        Timber.d("Invalid Remote type.");
-                        return;
-                }
+                remote = Remotes.getRemoteFromType(getApplicationContext(), remotetype);
             } catch (IOException e) {
                 Timber.e(e,"IO Error while reading remote code.");
                 return;

@@ -19,7 +19,7 @@ import de.jbamberger.irremote.service.ir.IRSenderService;
 import de.jbamberger.irremote.util.Tools;
 import timber.log.Timber;
 
-import static de.jbamberger.irremote.service.ir.Types.LED_REMOTE_44_KEY;
+import static de.jbamberger.irremote.service.ir.Remotes.LED_REMOTE_44_KEY;
 
 
 public class RemoteNotificationService extends Service {
