@@ -14,6 +14,8 @@ import android.os.Messenger;
 import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
+import java.lang.ref.WeakReference;
+
 import de.jbamberger.irremote.R;
 import de.jbamberger.irremote.service.ir.IRSenderService;
 import de.jbamberger.irremote.service.ir.IrTools;
@@ -28,7 +30,7 @@ public class RemoteNotificationService extends Service {
     public static final String ACTION_SEND_IR = "de.jbamberger.irremote.service.ACTION_SEND_IR";
 
     private BroadcastReceiver mReceiver;
-    private Messenger mServer = new Messenger(new IncomingHandler());
+    private Messenger mServer = new Messenger(new IncomingHandler(this));
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -40,14 +42,27 @@ public class RemoteNotificationService extends Service {
         return mServer.getBinder();
     }
 
-    private class IncomingHandler extends android.os.Handler {
+    private static class IncomingHandler extends android.os.Handler {
+
+        private final WeakReference<Context> weakContext;
+
+        IncomingHandler(Context context) {
+            this.weakContext = new WeakReference<Context>(context);
+        }
+
         @Override
         public void handleMessage(Message msg) {
             Timber.d("message incoming: " + msg.what);
             switch (msg.what) {
                 case COM_SEND_CODE:
                     Timber.d("Received " + msg.arg1);
-                    IRSenderService.startActionSendIrCode(getApplicationContext(), LED_REMOTE_44_KEY, "");//FIXME: msg.arg1);
+                    Context context = weakContext.get();
+                    if (context != null) {
+                        IRSenderService.startActionSendIrCode(context.getApplicationContext(), LED_REMOTE_44_KEY, "");//FIXME: msg.arg1);
+                    } else {
+                        Timber.w("Context is gone, can not send ir code.");
+                    }
+
 
                 default:
                     super.handleMessage(msg);

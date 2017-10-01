@@ -18,8 +18,8 @@ import de.jbamberger.irremote.util.LEDRemoteUIInflater;
 
 public class MainActivity extends AppCompatActivity {
 
-    Messenger mService;
-    ServiceConnection serviceConnection = new ServiceConnection() {
+    private Messenger mService;
+    private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mService = new Messenger(service);
