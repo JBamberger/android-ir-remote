@@ -17,7 +17,8 @@ void setup()
   My_Receiver.enableIRIn(); // Start the receiver
 }
  
-void loop() {
+void loop()
+{
 
 //Continuously look for results. When you have them pass them to the decoder
   if (My_Receiver.GetResults(&My_Decoder)) {
