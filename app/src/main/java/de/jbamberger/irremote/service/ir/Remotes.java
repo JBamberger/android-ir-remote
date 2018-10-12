@@ -1,6 +1,7 @@
 package de.jbamberger.irremote.service.ir;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 
@@ -55,17 +56,17 @@ public final class Remotes {
         return new Remote(readRemoteFile(context, R.raw.panasonic_remote), new PanasonicTranslator());
     }
 
-    private static List<String> readRemoteFile(Context context, int resourceId) throws IOException {
-        BufferedReader reader = new BufferedReader(
-                new InputStreamReader(
-                        context.getResources().openRawResource(resourceId)));
-        String line;
-        List<String> codes = new ArrayList<>();
+    private static List<String> readRemoteFile(Context context, int id) throws IOException {
+        Resources r = context.getResources();
+        try (BufferedReader reader =
+                     new BufferedReader(new InputStreamReader(r.openRawResource(id)))) {
+            String line;
+            List<String> codes = new ArrayList<>();
 
-        while ((line = reader.readLine()) != null) {
-            codes.add(line);
+            while ((line = reader.readLine()) != null) {
+                codes.add(line);
+            }
+            return codes;
         }
-        return codes;
     }
-
 }

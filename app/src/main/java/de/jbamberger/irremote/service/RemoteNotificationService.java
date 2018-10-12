@@ -47,7 +47,7 @@ public class RemoteNotificationService extends Service {
         private final WeakReference<Context> weakContext;
 
         IncomingHandler(Context context) {
-            this.weakContext = new WeakReference<Context>(context);
+            this.weakContext = new WeakReference<>(context);
         }
 
         @Override

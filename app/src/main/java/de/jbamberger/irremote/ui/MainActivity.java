@@ -3,6 +3,7 @@ package de.jbamberger.irremote.ui;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Messenger;
@@ -12,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.TableLayout;
 
 import de.jbamberger.irremote.R;
+import de.jbamberger.irremote.receiver.AutoStartReceiver;
 import de.jbamberger.irremote.service.RemoteNotificationService;
 import de.jbamberger.irremote.util.LEDRemoteUIInflater;
 
@@ -62,5 +64,31 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean isAutoStartEnabled() {
+        ComponentName component = new ComponentName(this, AutoStartReceiver.class);
+
+        int status = getPackageManager().getComponentEnabledSetting(component);
+        if (status == PackageManager.COMPONENT_ENABLED_STATE_DEFAULT) {
+            try {
+                return getPackageManager().getReceiverInfo(component, 0).isEnabled();
+            } catch (PackageManager.NameNotFoundException e) {
+                return false;
+            }
+        } else {
+            return status == PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+        }
+    }
+
+    private void toggleAutoStartReceiver(boolean enable) {
+        ComponentName component = new ComponentName(this, AutoStartReceiver.class);
+        if (enable) {
+            getPackageManager().setComponentEnabledSetting(component,
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+        } else {
+            getPackageManager().setComponentEnabledSetting(component,
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+        }
     }
 }
