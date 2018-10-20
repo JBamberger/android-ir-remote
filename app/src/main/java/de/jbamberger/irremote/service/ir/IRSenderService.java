@@ -44,14 +44,16 @@ public class IRSenderService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if (intent != null) {
-            final String action = intent.getAction();
-            if (ACTION_SEND_IR_CODE.equals(action)) {
-                final int remoteType = intent.getIntExtra(EXTRA_COMMAND_NAME, 0);
-                final String commandName = intent.getStringExtra(EXTRA_REMOTE_TYPE);
-                handleActionSendIrCode(remoteType, commandName);
-            }
+        if (intent == null) {
+            return;
         }
+        final String action = intent.getAction();
+        if (!ACTION_SEND_IR_CODE.equals(action)) {
+            return;
+        }
+        final int remoteType = intent.getIntExtra(EXTRA_COMMAND_NAME, 0);
+        final String commandName = intent.getStringExtra(EXTRA_REMOTE_TYPE);
+        handleActionSendIrCode(remoteType, commandName);
     }
 
 
@@ -61,7 +63,7 @@ public class IRSenderService extends IntentService {
             try {
                 remote = Remotes.getRemoteFromType(getApplicationContext(), remoteType);
             } catch (IOException e) {
-                Timber.e(e,"IO Error while reading remote code.");
+                Timber.e(e, "IO Error while reading remote code.");
                 return;
             }
             remotes.put(remoteType, remote);
@@ -76,17 +78,17 @@ public class IRSenderService extends IntentService {
     }
 
     private void send(int frequency, @NonNull int[] code) {
-        if (mIRManager != null && mIRManager.hasIrEmitter()) {
-            ConsumerIrManager.CarrierFrequencyRange[] range = mIRManager.getCarrierFrequencies();
-            for (ConsumerIrManager.CarrierFrequencyRange carrierFrequencyRange : range) {
-                if (carrierFrequencyRange.getMinFrequency() <= frequency && frequency <= carrierFrequencyRange.getMaxFrequency()) {
-                    mIRManager.transmit(frequency, code);
-                    return;
-                }
-            }
-            Timber.d("The required frequency range is not supported.");
-        } else {
-            Timber.d("An error occurred while transmitting.");// TODO: 16.02.2017 replace with res
+        if (mIRManager == null || !mIRManager.hasIrEmitter()) {
+            Timber.d("An error occurred while transmitting.");
+            return;
         }
+        ConsumerIrManager.CarrierFrequencyRange[] range = mIRManager.getCarrierFrequencies();
+        for (ConsumerIrManager.CarrierFrequencyRange carrierFrequencyRange : range) {
+            if (carrierFrequencyRange.getMinFrequency() <= frequency && frequency <= carrierFrequencyRange.getMaxFrequency()) {
+                mIRManager.transmit(frequency, code);
+                return;
+            }
+        }
+        Timber.d("The required frequency range is not supported.");
     }
 }
