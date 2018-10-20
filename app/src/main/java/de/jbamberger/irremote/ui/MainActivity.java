@@ -10,12 +10,13 @@ import android.os.Messenger;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TableLayout;
+import android.view.View;
 
 import de.jbamberger.irremote.R;
 import de.jbamberger.irremote.receiver.AutoStartReceiver;
 import de.jbamberger.irremote.service.RemoteNotificationService;
-import de.jbamberger.irremote.util.LEDRemoteUIInflater;
+import de.jbamberger.irremote.service.ir.IRSenderService;
+import de.jbamberger.irremote.service.ir.Remotes;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -37,15 +38,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.ceil_layout);
 
         Intent startService = new Intent(this, RemoteNotificationService.class);
         startService(startService);
         bindService(startService, serviceConnection, BIND_AUTO_CREATE);
+    }
 
-        TableLayout layout = findViewById(R.id.main_layout);
-        LEDRemoteUIInflater inf = new LEDRemoteUIInflater();
-        inf.inflateRemoteControlUI(this, layout);
+    public void onClick(View v) {
+        String command = (String) v.getTag();
+        IRSenderService.startActionSendIrCode(this, Remotes.CEIL_REMOTE, command);
     }
 
     @Override

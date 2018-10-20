@@ -22,13 +22,14 @@ import de.jbamberger.irremote.R;
 public final class Remotes {
 
     @Retention(RetentionPolicy.SOURCE)
-    @IntDef({LED_REMOTE_44_KEY, PANASONIC_REMOTE})
+    @IntDef({LED_REMOTE_44_KEY, PANASONIC_REMOTE, CEIL_REMOTE})
     @interface RemoteType {
     }
 
 
     public static final int LED_REMOTE_44_KEY = 0;
     public static final int PANASONIC_REMOTE = 1;
+    public static final int CEIL_REMOTE = 2;
 
     private Remotes() {
         throw new AssertionError("No instances of Remotes!");
@@ -41,6 +42,8 @@ public final class Remotes {
                 return getLed44KeyRemote(context);
             case PANASONIC_REMOTE:
                 return getPanasonicRemote(context);
+            case CEIL_REMOTE:
+                return getCeilRemote(context);
             default:
                 throw new IllegalArgumentException("Tried to get remote with invalid type: " + type);
         }
@@ -54,6 +57,11 @@ public final class Remotes {
     @NonNull
     private static Remote getPanasonicRemote(@NonNull Context context) throws IOException {
         return new Remote(readRemoteFile(context, R.raw.panasonic_remote), new PanasonicTranslator());
+    }
+
+    @NonNull
+    private static Remote getCeilRemote(@NonNull Context context) throws IOException {
+        return new Remote(readRemoteFile(context, R.raw.ceil_light_remote), new ExpandedNECTranslator());
     }
 
     private static List<String> readRemoteFile(Context context, int id) throws IOException {
