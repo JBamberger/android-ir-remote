@@ -20,7 +20,7 @@ import java.util.function.Consumer
 class MainActivity : AppCompatActivity() {
 
     private var remotes: Map<String, RemoteParser.RemoteDefinition>? = null
-    private val exec  = Executors.newSingleThreadExecutor()
+    private val exec = Executors.newSingleThreadExecutor()
     private var remoteLayout: TableLayout? = null
     private var commands: RemoteParser.IrDef? = null
     private var initMenu = false
@@ -52,10 +52,12 @@ class MainActivity : AppCompatActivity() {
 
             val range = irManager.carrierFrequencies
             for (carrierFrequencyRange in range) {
-                if (carrierFrequencyRange.minFrequency <= frequency && frequency <= carrierFrequencyRange.maxFrequency) {
+                if (carrierFrequencyRange.minFrequency <= frequency
+                        && frequency <= carrierFrequencyRange.maxFrequency) {
                     if (vibrator.hasVibrator()) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
+                            vibrator.vibrate(VibrationEffect.createOneShot(
+                                    50, VibrationEffect.DEFAULT_AMPLITUDE))
                         } else {
                             @Suppress("DEPRECATION")
                             vibrator.vibrate(50)

@@ -1,13 +1,13 @@
 package de.jbamberger.irremote
 
-import kotlin.experimental.and
+import de.jbamberger.irremote.Utils.hexToBytes
 import kotlin.experimental.inv
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-internal abstract class CodeTranslator
+internal class CodeTranslator
 /**
  * one and zero have to have the same length.
  *
@@ -16,8 +16,13 @@ internal abstract class CodeTranslator
  * @param zero         Sequence representing a binary zero
  * @param one          Sequence representing a binary one
  */
-(private val initSequence: IntArray, private val endSequence: IntArray,
- private val zero: IntArray, private val one: IntArray, val frequency: Int) {
+private constructor(
+        private val initSequence: IntArray,
+        private val endSequence: IntArray,
+        private val zero: IntArray,
+        private val one: IntArray,
+        private val frequency: Int,
+        private val transform: (String) -> ByteArray) {
 
     /**
      * returns the on off sequence that is represented by the codeString
@@ -25,22 +30,8 @@ internal abstract class CodeTranslator
      * @param codeString code
      * @return on off sequence of the codeString
      */
-    abstract fun buildCode(codeString: String): IntArray
+    fun buildCode(codeString: String) = buildRawCode(transform.invoke(codeString))
 
-    /**
-     * This method injects the inverse of every byte into the array. {a, b} becomes {a, ~a. b, ~b}.
-     *
-     * @param data input data
-     * @return data with injected inverses
-     */
-    fun injectInverse(data: ByteArray): ByteArray {
-        val res = ByteArray(data.size * 2)
-        for (i in data.indices) {
-            res[2 * i] = data[i]
-            res[2 * i + 1] = data[i].inv().toByte()
-        }
-        return res
-    }
 
     /**
      * Creates an int array, writes the start sequence, then the bytes represented by one and zero
@@ -49,7 +40,7 @@ internal abstract class CodeTranslator
      * @param data the bytes to be sandwiched between start and end
      * @return the encoded sequence
      */
-    fun buildRawCode(data: ByteArray): IntArray {
+    private fun buildRawCode(data: ByteArray): IntArray {
         val size = initSequence.size + data.size * (8 * zero.size) + endSequence.size
         val code = IntArray(size)
         System.arraycopy(initSequence, 0, code, 0, initSequence.size)
@@ -69,40 +60,44 @@ internal abstract class CodeTranslator
     }
 
     companion object {
-
+        public enum class IrCodeFormat{
+            NEC, PANASONIC
+        }
         /**
-         * Creates a byte representation of a hexadecimal string.
+         * This method injects the inverse of every byte into the array. {a, b} becomes {a, ~a, b, ~b}.
          *
-         * @param s hex string
-         * @return bytes encoded in the string
+         * @param data input data
+         * @return data with injected inverses
          */
-        fun hexToBytes(s: String): ByteArray {
-            val len = s.length
-            val data = ByteArray(len / 2)
-            var i = 0
-            while (i < len) {
-                data[i / 2] = ((Character.digit(s[i], 16) shl 4) + Character.digit(s[i + 1], 16)).toByte()
-                i += 2
+        private fun injectInverse(data: ByteArray): ByteArray {
+            val res = ByteArray(data.size * 2)
+            for (i in data.indices) {
+                res[2 * i] = data[i]
+                res[2 * i + 1] = data[i].inv()
             }
-            return data
+            return res
         }
 
-        private val hexArray = "0123456789ABCDEF".toCharArray()
-
-        /**
-         * encodes a byte sequence into a hex string.
-         *
-         * @param bytes input
-         * @return bytes as hex string
-         */
-        fun bytesToHex(bytes: ByteArray): String {
-            val hexChars = CharArray(bytes.size * 2)
-            for (j in bytes.indices) {
-                val v = bytes[j] and 0xFF.toByte()
-                hexChars[j * 2] = hexArray[v.toInt() ushr 4]
-                hexChars[j * 2 + 1] = hexArray[v.toInt() and 0x0F]
-            }
-            return String(hexChars)
+        fun getTranslator(format: IrCodeFormat) = when (format) {
+            IrCodeFormat.NEC -> CodeTranslator.getNecTranslator()
+            IrCodeFormat.PANASONIC -> CodeTranslator.getPanasonicTranslator()
+            else -> throw IllegalArgumentException("Invalid code format $format")
         }
+
+        private fun getNecTranslator() = CodeTranslator(
+                initSequence = intArrayOf(9000, 4500),
+                endSequence = intArrayOf(560),
+                zero = intArrayOf(560, 560),
+                one = intArrayOf(560, 1690),
+                frequency = 38000,
+                transform = { injectInverse(hexToBytes(it)) })
+
+        private fun getPanasonicTranslator() = CodeTranslator(
+                initSequence = intArrayOf(3456, 1728),
+                endSequence = intArrayOf(432),
+                zero = intArrayOf(432, 432),
+                one = intArrayOf(432, 1296),
+                frequency = 37000,
+                transform = Utils::hexToBytes)
     }
 }
