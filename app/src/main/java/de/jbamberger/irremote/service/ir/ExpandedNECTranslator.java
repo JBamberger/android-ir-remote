@@ -12,6 +12,6 @@ public class ExpandedNECTranslator extends CodeTranslator {
 
     @Override
     public int[] buildCode(String codeString) {
-        return buildRawCode(hexToBytes(codeString));
+        return buildRawCode(Companion.hexToBytes(codeString));
     }
 }

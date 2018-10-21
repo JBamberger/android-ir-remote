@@ -1,96 +1,164 @@
 package de.jbamberger.irremote.ui;
 
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
+import android.content.Context;
+import android.hardware.ConsumerIrManager;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Messenger;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.Toast;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import de.jbamberger.irremote.R;
-import de.jbamberger.irremote.receiver.AutoStartReceiver;
-import de.jbamberger.irremote.service.RemoteNotificationService;
-import de.jbamberger.irremote.service.ir.IRSenderService;
-import de.jbamberger.irremote.service.ir.Remotes;
+import de.jbamberger.irremote.util.Utils;
+import timber.log.Timber;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private Messenger mService;
-    private ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mService = new Messenger(service);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mService = null;
-        }
-    };
-
+    private Map<String, RemoteParser.RemoteDefinition> remotes;
+    private Executor exec;
+    private TableLayout remoteLayout;
+    private RemoteParser.IrDef commands;
+    private boolean initMenu = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ceil_layout);
+        setContentView(R.layout.activity_main);
 
-        Intent startService = new Intent(this, RemoteNotificationService.class);
-        startService(startService);
-        bindService(startService, serviceConnection, BIND_AUTO_CREATE);
+        remoteLayout = findViewById(R.id.main_layout);
+
+        exec = Executors.newSingleThreadExecutor();
+        exec.execute(this::loadRemotes);
+
     }
 
-    public void onClick(View v) {
-        String command = (String) v.getTag();
-        IRSenderService.startActionSendIrCode(this, Remotes.CEIL_REMOTE, command);
+    public void runIR(String command) {
+        final int frequency = commands.getFrequency();
+        final int[] code = commands.getCodeMap().get(command);
+        exec.execute(() -> {
+            ConsumerIrManager mIRManager =
+                    (ConsumerIrManager) this.getSystemService(Context.CONSUMER_IR_SERVICE);
+            if (mIRManager == null || !mIRManager.hasIrEmitter()) {
+                Timber.d("An error occurred while transmitting.");
+                return;
+            }
+            ConsumerIrManager.CarrierFrequencyRange[] range = mIRManager.getCarrierFrequencies();
+            for (ConsumerIrManager.CarrierFrequencyRange carrierFrequencyRange : range) {
+                if (carrierFrequencyRange.getMinFrequency() <= frequency
+                        && frequency <= carrierFrequencyRange.getMaxFrequency()) {
+                    mIRManager.transmit(frequency, code);
+                    return;
+                }
+            }
+            Timber.d("The required frequency range is not supported.");
+
+        });
+//        String command = (String) v.getTag();
+//        IRSenderService.startActionSendIrCode(this, Remotes.CEIL_REMOTE, command);
+    }
+
+    private void onRemotesReady(Map<String, RemoteParser.RemoteDefinition> remotes) {
+        this.remotes = remotes;
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        if (remotes != null) {
+            menu.clear();
+            remotes.keySet().forEach(menu::add);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (remotes != null) {
+            RemoteParser.RemoteDefinition definition = remotes.get(item.getTitle().toString());
+            initUi(definition);
         }
+
 
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean isAutoStartEnabled() {
-        ComponentName component = new ComponentName(this, AutoStartReceiver.class);
+    private void onRemotesLoadingFailed() {
+        Toast.makeText(this, "Could not load remotes", Toast.LENGTH_LONG).show();
+    }
 
-        int status = getPackageManager().getComponentEnabledSetting(component);
-        if (status == PackageManager.COMPONENT_ENABLED_STATE_DEFAULT) {
-            try {
-                return getPackageManager().getReceiverInfo(component, 0).isEnabled();
-            } catch (PackageManager.NameNotFoundException e) {
-                return false;
+    private void initUi(RemoteParser.RemoteDefinition def) {
+        remoteLayout.removeAllViews();
+        initMenu = true;
+        if (def == null) {
+            return;
+        }
+        this.commands = def.getCommandDefs();
+
+        for (RemoteParser.Control[] row : def.getLayout().getControls()) {
+            TableRow tr = new TableRow(this);
+            for (RemoteParser.Control control : row) {
+                Button b = new Button(this);
+                if (control == null) {
+                    b.setVisibility(View.INVISIBLE);
+                } else {
+                    b.setOnTouchListener(new View.OnTouchListener() {
+                        private Handler handler;
+
+                        @Override public boolean onTouch(View v, MotionEvent event) {
+                            switch(event.getAction()) {
+                                case MotionEvent.ACTION_DOWN:
+                                    if (handler != null) return true;
+                                    handler = new Handler();
+                                    handler.post(action);
+                                    break;
+                                case MotionEvent.ACTION_UP:
+                                    if (handler == null) return true;
+                                    handler.removeCallbacks(action);
+                                    handler = null;
+                                    break;
+                            }
+                            return false;
+                        }
+
+                        private Runnable action = new Runnable() {
+                            @Override public void run() {
+                                exec.execute(() -> runIR(control.getCommand()));
+                                handler.postDelayed(this, 300);
+                            }
+                        };
+                    });
+                    b.setTag(control.getCommand());
+                    b.setText(control.getName());
+                }
+                tr.addView(b);
             }
-        } else {
-            return status == PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+            remoteLayout.addView(tr);
         }
     }
 
-    private void toggleAutoStartReceiver(boolean enable) {
-        ComponentName component = new ComponentName(this, AutoStartReceiver.class);
-        if (enable) {
-            getPackageManager().setComponentEnabledSetting(component,
-                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-        } else {
-            getPackageManager().setComponentEnabledSetting(component,
-                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+    private void loadRemotes() {
+        try (InputStream is = getResources().openRawResource(R.raw.remotes)) {
+            final String s = Utils.readString(is);
+            final RemoteParser p = new RemoteParser();
+            final Map<String, RemoteParser.RemoteDefinition> remotes = p.parse(s);
+            runOnUiThread(() -> onRemotesReady(remotes));
+        } catch (IOException e) {
+            e.printStackTrace();
+            runOnUiThread(this::onRemotesLoadingFailed);
         }
     }
 }

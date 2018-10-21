@@ -61,7 +61,7 @@ public final class Remotes {
 
     @NonNull
     private static Remote getCeilRemote(@NonNull Context context) throws IOException {
-        return new Remote(readRemoteFile(context, R.raw.ceil_light_remote), new ExpandedNECTranslator());
+        return new Remote(readRemoteFile(context, R.raw.remotes), new ExpandedNECTranslator());
     }
 
     private static List<String> readRemoteFile(Context context, int id) throws IOException {

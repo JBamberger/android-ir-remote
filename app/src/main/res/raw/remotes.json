@@ -1,0 +1,379 @@
+{
+  "Ceiling Light": {
+    "layout": {
+      "width": 3,
+      "height": 3,
+      "elements": [
+        [
+          {
+            "command": "Power",
+            "name": "Power"
+          },
+          {
+            "command": "Play",
+            "name": "Play"
+          },
+          {
+            "command": "Sleep",
+            "name": "Sleep"
+          }
+        ],
+        [
+          {
+            "command": "BrightnessUp",
+            "name": "BrightnessUp"
+          },
+          null,
+          {
+            "command": "ColorTempUp",
+            "name": "ColorTempUp"
+          }
+        ],
+        [
+          {
+            "command": "BrightnessDown",
+            "name": "BrightnessDown"
+          },
+          null,
+          {
+            "command": "ColorTempDown",
+            "name": "ColorTempDown"
+          }
+        ]
+      ]
+    },
+    "irDef": {
+      "frequency": 38000,
+      "codeFormat": "NEC",
+      "codeMap": {
+        "Power": "0180",
+        "Sleep": "01A0",
+        "BrightnessUp": "0148",
+        "BrightnessDown": "0178",
+        "ColorTempUp": "0140",
+        "ColorTempDown": "01C0",
+        "Play": "0160",
+        "RGB(L)": "01D8",
+        "RGB(R)": "0138",
+        "Star": "0158",
+        "30s": "0110"
+      }
+    }
+  },
+  "44-Key RGB Led Stripes": {
+    "layout": {
+      "width": 4,
+      "height": 11,
+      "elements": [
+        [
+          {
+            "name": "brighter",
+            "command": "up"
+          },
+          {
+            "name": "dimmer",
+            "command": "down"
+          },
+          {
+            "name": "play",
+            "command": "play"
+          },
+          {
+            "name": "power",
+            "command": "power"
+          }
+        ],
+        [
+          {
+            "name": "red0",
+            "command": "red0"
+          },
+          {
+            "name": "green0",
+            "command": "green0"
+          },
+          {
+            "name": "blue0",
+            "command": "blue0"
+          },
+          {
+            "name": "white0",
+            "command": "white0"
+          }
+        ],
+        [
+          {
+            "name": "red1",
+            "command": "red1"
+          },
+          {
+            "name": "green1",
+            "command": "green1"
+          },
+          {
+            "name": "blue1",
+            "command": "blue1"
+          },
+          {
+            "name": "white1",
+            "command": "white1"
+          }
+        ],
+        [
+          {
+            "name": "red2",
+            "command": "red2"
+          },
+          {
+            "name": "green2",
+            "command": "green2"
+          },
+          {
+            "name": "blue2",
+            "command": "blue2"
+          },
+          {
+            "name": "white2",
+            "command": "white2"
+          }
+        ],
+        [
+          {
+            "name": "red3",
+            "command": "red3"
+          },
+          {
+            "name": "green3",
+            "command": "green3"
+          },
+          {
+            "name": "blue3",
+            "command": "blue3"
+          },
+          {
+            "name": "white3",
+            "command": "white3"
+          }
+        ],
+        [
+          {
+            "name": "red4",
+            "command": "red4"
+          },
+          {
+            "name": "green4",
+            "command": "green4"
+          },
+          {
+            "name": "blue4",
+            "command": "blue4"
+          },
+          {
+            "name": "white4",
+            "command": "white4"
+          }
+        ],
+        [
+          {
+            "name": "redUp",
+            "command": "redUp"
+          },
+          {
+            "name": "greenUp",
+            "command": "greenUp"
+          },
+          {
+            "name": "blueUp",
+            "command": "blueUp"
+          },
+          {
+            "name": "quick",
+            "command": "quick"
+          }
+        ],
+        [
+          {
+            "name": "redDown",
+            "command": "redDown"
+          },
+          {
+            "name": "greenDown",
+            "command": "greenDown"
+          },
+          {
+            "name": "blueDown",
+            "command": "blueDown"
+          },
+          {
+            "name": "slow",
+            "command": "slow"
+          }
+        ],
+        [
+          {
+            "name": "diy1",
+            "command": "diy1"
+          },
+          {
+            "name": "diy2",
+            "command": "diy2"
+          },
+          {
+            "name": "diy3",
+            "command": "diy3"
+          },
+          {
+            "name": "auto",
+            "command": "auto"
+          }
+        ],
+        [
+          {
+            "name": "diy4",
+            "command": "diy4"
+          },
+          {
+            "name": "diy5",
+            "command": "diy5"
+          },
+          {
+            "name": "diy6",
+            "command": "diy6"
+          },
+          {
+            "name": "flash",
+            "command": "flash"
+          }
+        ],
+        [
+          {
+            "name": "jump3",
+            "command": "jump3"
+          },
+          {
+            "name": "jump7",
+            "command": "jump7"
+          },
+          {
+            "name": "fade3",
+            "command": "fade3"
+          },
+          {
+            "name": "fade7",
+            "command": "fade7"
+          }
+        ]
+      ]
+    },
+    "irDef": {
+      "frequency": 38000,
+      "codeFormat": "NEC",
+      "codeMap": {
+        "power": "FF02",
+        "play": "FF82",
+        "up": "FF3A",
+        "down": "FFBA",
+        "quick": "FFE8",
+        "slow": "FFC8",
+        "auto": "FFF0",
+        "flash": "FFD0",
+        "jump3": "FF20",
+        "jump7": "FFA0",
+        "fade3": "FF60",
+        "fade7": "FFE0",
+        "redUp": "FF28",
+        "redDown": "FF08",
+        "greenUp": "FFA8",
+        "greenDown": "FF88",
+        "blueUp": "FF68",
+        "blueDown": "FF48",
+        "diy1": "FF30",
+        "diy2": "FFB0",
+        "diy3": "FF70",
+        "diy4": "FF10",
+        "diy5": "FF90",
+        "diy6": "FF50",
+        "red0": "FF1A",
+        "red1": "FF2A",
+        "red2": "FF0A",
+        "red3": "FF38",
+        "red4": "FF18",
+        "green0": "FF9A",
+        "green1": "FFAA",
+        "green2": "FF8A",
+        "green3": "FFB8",
+        "green4": "FF98",
+        "blue0": "FFA2",
+        "blue1": "FF92",
+        "blue2": "FFB2",
+        "blue3": "FF78",
+        "blue4": "FF58",
+        "white0": "FF22",
+        "white1": "FF12",
+        "white2": "FF32",
+        "white3": "FFF8",
+        "white4": "FFD8"
+      }
+    }
+  },
+  "Panasonic Sound System": {
+    "layout": {
+      "width": 0,
+      "height": 0,
+      "elements": []
+    },
+    "irDef": {
+      "frequency": 37000,
+      "codeFormat": "PANASONIC",
+      "codeMap": {
+        "Power": "4004053ABC83",
+        "Play": "4004053AD9E6",
+        "Clock/Timer": "4004053AA996",
+        "Dimmer": "4004053AE9D6",
+        "AutoOff": "4004053A1926",
+        "Sleep": "4004053A6956",
+        "1": "4004053A0837",
+        "2": "4004053A88B7",
+        "3": "4004053A4877",
+        "4": "4004053AC8F7",
+        "5": "4004053A2817",
+        "6": "4004053AA897",
+        "7": "4004053A6857",
+        "8": "4004053AE8D7",
+        "9": "4004053A1827",
+        "0": "4004053A98A7",
+        ">=10": "4004053A211E",
+        "Del": "400405527F28",
+        "Vol+": "400405020403",
+        "Vol-": "400405028483",
+        "Mute": "400405024C4B",
+        "Program": "400405525106",
+        "Repeat": "4004053AE2DD",
+        "Play Mode": "4004053ADDE2",
+        "USB": "4004053AD3EC",
+        "CD": "400405525007",
+        "Music Port": "40040502595E",
+        "<<": "4004053A92AD",
+        "FM/AM": "400405222502",
+        ">>": "4004053A526D",
+        "Square(pause)": "4004053A003F",
+        "Re-Master": "4004053A734C",
+        "D-Bass": "400405029394",
+        "Bass": "400405024443",
+        "Preset EQ": "4004050AC1CE",
+        "Treble": "400405022423",
+        "up": "4004053ACFF0",
+        "down": "4004053A4F70",
+        "left": "4004053ABF80",
+        "right": "4004053A3F00",
+        "ok": "4004053ADFE0",
+        "Display": "4004053AAA95",
+        "Surround": "400405020C0B",
+        "Auto Preset": "40040522E5C2",
+        "Tune Mode": "40040522193E",
+        "FM Mode": "400405222106",
+        "Input Level": "4004054AA1EE"
+      }
+    }
+  }
+}
