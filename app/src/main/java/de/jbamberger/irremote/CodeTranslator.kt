@@ -1,4 +1,4 @@
-package de.jbamberger.irremote.service.ir
+package de.jbamberger.irremote
 
 import kotlin.experimental.and
 import kotlin.experimental.inv

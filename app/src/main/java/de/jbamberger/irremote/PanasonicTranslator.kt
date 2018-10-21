@@ -1,4 +1,4 @@
-package de.jbamberger.irremote.service.ir
+package de.jbamberger.irremote
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)

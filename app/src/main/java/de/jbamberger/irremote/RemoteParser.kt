@@ -1,7 +1,5 @@
-package de.jbamberger.irremote.ui
+package de.jbamberger.irremote
 
-import de.jbamberger.irremote.service.ir.NECTranslator
-import de.jbamberger.irremote.service.ir.PanasonicTranslator
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -67,12 +65,12 @@ class RemoteParser {
         }
     }
 
-    fun parse(s: String): Map<String, RemoteParser.RemoteDefinition> {
-        val remoteMap: MutableMap<String, RemoteParser.RemoteDefinition> = HashMap()
+    fun parse(s: String): Map<String, RemoteDefinition> {
+        val remoteMap: MutableMap<String, RemoteDefinition> = HashMap()
         val remotes = JSONObject(s)
         val names = remotes.names() ?: return emptyMap()
         names.forEachString {
-            remoteMap[it] = RemoteParser.RemoteDefinition.fromJson(remotes.getJSONObject(it))
+            remoteMap[it] = RemoteDefinition.fromJson(remotes.getJSONObject(it))
         }
         return remoteMap
     }

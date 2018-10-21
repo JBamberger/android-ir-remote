@@ -1,4 +1,4 @@
-package de.jbamberger.irremote.ui;
+package de.jbamberger.irremote;
 
 import android.content.Context;
 import android.hardware.ConsumerIrManager;
@@ -20,8 +20,6 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import de.jbamberger.irremote.R;
-import de.jbamberger.irremote.util.Utils;
 import timber.log.Timber;
 
 

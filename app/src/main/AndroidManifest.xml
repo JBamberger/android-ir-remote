@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="de.jbamberger.irremote">
 
     <uses-permission android:name="android.permission.TRANSMIT_IR" />
@@ -13,9 +14,10 @@
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name">
 
             <intent-filter>
@@ -24,38 +26,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <service
-            android:name="de.jbamberger.irremote.service.RemoteNotificationService"
-            android:enabled="true"
-            android:icon="@drawable/ic_ir_remote_service"
-            android:label="@string/service_name_control"
-            android:process=":control_service" />
-
-        <!--
-        receiver
-            android:name=".AutoStartReceiver"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver
-        -->
-
-        <service
-            android:name="de.jbamberger.irremote.service.tile.RemoteTileService"
-            android:icon="@drawable/ic_tile"
-            android:label="@string/tile_name_power"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
-            <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE" />
-            </intent-filter>
-        </service>
-
-        <service
-            android:name="de.jbamberger.irremote.service.ir.IRSenderService"
-            android:exported="false" />
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package de.jbamberger.irremote.util;
+package de.jbamberger.irremote;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

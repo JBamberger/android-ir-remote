@@ -1,4 +1,4 @@
-package de.jbamberger.irremote.service.ir
+package de.jbamberger.irremote
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
@@ -11,7 +11,5 @@ internal class NECTranslator : CodeTranslator(
         one = intArrayOf(560, 1690),
         frequency = 38000) {
 
-    override fun buildCode(codeString: String) =
-            buildRawCode(injectInverse(hexToBytes(codeString)))
-
+    override fun buildCode(codeString: String) = buildRawCode(injectInverse(hexToBytes(codeString)))
 }
