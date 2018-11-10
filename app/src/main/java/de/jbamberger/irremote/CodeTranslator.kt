@@ -81,7 +81,6 @@ private constructor(
         fun getTranslator(format: IrCodeFormat) = when (format) {
             IrCodeFormat.NEC -> CodeTranslator.getNecTranslator()
             IrCodeFormat.PANASONIC -> CodeTranslator.getPanasonicTranslator()
-            else -> throw IllegalArgumentException("Invalid code format $format")
         }
 
         private fun getNecTranslator() = CodeTranslator(

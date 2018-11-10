@@ -7,9 +7,9 @@ class Preprocessor {
         val map = File("keymap-gen/panasonic_map")
         val keyMap = map.readLines()
                 .drop(1)
-                .flatMap {
-                    val key = it.substringBefore(";").trim()
-                    val values = it.substringAfter(";")
+                .flatMap { line ->
+                    val key = line.substringBefore(";").trim()
+                    val values = line.substringAfter(";")
 
                     values.split(",")
                             .asSequence()
@@ -23,8 +23,8 @@ class Preprocessor {
         input.readLines()
                 .asSequence()
                 .drop(1)
-                .map {
-                    val x = it.split(",")
+                .map { line ->
+                    val x = line.split(",")
                     val num = x[0].trim()
                     val v = x.drop(3)
                             .dropLast(1)
@@ -44,16 +44,13 @@ class Preprocessor {
                                 }
                             }
                             .chunked(8) {
-                                String.format("%02X", (
-                                        (it[0].toInt() shl 7)
-                                                or (it[1].toInt() shl 6)
-                                                or (it[2].toInt() shl 5)
-                                                or (it[3].toInt() shl 4)
-                                                or (it[4].toInt() shl 3)
-                                                or (it[5].toInt() shl 2)
-                                                or (it[6].toInt() shl 1)
-                                                or (it[7].toInt() shl 0)
-                                        ).toByte())
+                                var value = 0
+
+                                for (i in 0..7) {
+                                    value = value or (it[i].toInt() shl (7 - i))
+                                }
+
+                                String.format("%02X", value.toByte())
                             }
                             .joinToString("")
                     Pair(num, v)
