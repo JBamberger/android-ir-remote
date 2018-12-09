@@ -1,5 +1,6 @@
 package de.jbamberger.irremote
 
+import android.content.Intent
 import android.hardware.ConsumerIrManager
 import android.os.*
 import android.view.Menu
@@ -29,6 +30,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        startActivity(Intent(this, TestActivity::class.java))
+        return
+
         setContentView(R.layout.activity_main)
 
         remoteLayout = findViewById(R.id.main_layout)
