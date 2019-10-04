@@ -1,8 +1,9 @@
 package de.jbamberger.irremote
 
-import android.content.Intent
 import android.hardware.ConsumerIrManager
-import android.os.*
+import android.os.Bundle
+import android.os.Handler
+import android.os.Vibrator
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -26,22 +27,18 @@ class MainActivity : AppCompatActivity() {
     private var commands: RemoteParser.IrDef? = null
     private var initMenu = false
     private var irManager: ConsumerIrManager? = null
-    private lateinit var vibrator: Vibrator
+    private lateinit var vibrator: VibrationAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        startActivity(Intent(this, TestActivity::class.java))
-        return
-
         setContentView(R.layout.activity_main)
 
         remoteLayout = findViewById(R.id.main_layout)
         irManager = this.getSystemService(ConsumerIrManager::class.java)
-        vibrator = this.getSystemService(Vibrator::class.java)
+        vibrator = getVibrationAdapter(this.getSystemService(Vibrator::class.java))
 
         if (irManager == null || !irManager!!.hasIrEmitter()) {
-            Toast.makeText(this, "This device does not support Infrared communication.",
+            Toast.makeText(this, "This device does not support infrared communication.",
                     Toast.LENGTH_LONG).show()
         } else {
             loadRemotes()
@@ -59,15 +56,7 @@ class MainActivity : AppCompatActivity() {
             for (carrierFrequencyRange in range) {
                 if (carrierFrequencyRange.minFrequency <= frequency
                         && frequency <= carrierFrequencyRange.maxFrequency) {
-                    if (vibrator.hasVibrator()) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            vibrator.vibrate(VibrationEffect.createOneShot(
-                                    50, VibrationEffect.DEFAULT_AMPLITUDE))
-                        } else {
-                            @Suppress("DEPRECATION")
-                            vibrator.vibrate(50)
-                        }
-                    }
+                    vibrator.vibrate()
                     irManager.transmit(frequency, code)
                     return@execute
                 }
@@ -156,11 +145,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadRemotes() = exec.execute {
         try {
-            resources.openRawResource(R.raw.remotes)
-                    .use {
-                        val remotes = RemoteParser().parse(Utils.readString(it))
-                        runOnUiThread { onRemotesReady(remotes) }
-                    }
+            resources.openRawResource(R.raw.remotes).use {
+                val remotes = RemoteParser().parse(Utils.readString(it))
+                runOnUiThread { onRemotesReady(remotes) }
+            }
         } catch (e: IOException) {
             e.printStackTrace()
             runOnUiThread { this.onRemotesLoadingFailed() }
