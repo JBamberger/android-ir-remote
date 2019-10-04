@@ -1,12 +1,13 @@
-# android-ir-remote
+# Android Infrared Remote Control
 ![Build status](https://github.com/jbamberger/android-ir-remote/workflows/Gradle%20build/badge.svg)
 
-Just some code to control cheap chinese rgb led stripes. There is some code hidden which can be used
-to replace any ir remote control. It may be necessary to reverse engineer the ir codes of the
-remote. I've used an Arduino with an IR Receiver and the following lib:
-[IRLib](https://github.com/cyborg5/IRLib/)
+This repository contains a prototypical implementation of an infrared remote control. The App uses
+the integrated IR blaster of the phone to mimic the original ir codes. The IR codes must be
+extracted from the original remote control. To do so, an Arduino board an an IR receiver can be
+used. The following snippet samples the IR receiver connected to an Arduino and prints the received
+codes. It uses the following great IR library: [IRLib](https://github.com/cyborg5/IRLib/)
 
-```
+```c++
 #include <IRLib.h>
  
 IRrecv My_Receiver(11); //connect the receiver to pin 11
