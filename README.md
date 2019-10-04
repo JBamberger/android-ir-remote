@@ -1,6 +1,10 @@
-# ir-led-remote
+# android-ir-remote
+![Build status](https://github.com/jbamberger/android-ir-remote/workflows/Gradle%20build/badge.svg)
 
-Just some code to control cheap chinese rgb led stripes. There is some code hidden which can be used to replace any ir remote control. It may be necessary to reverse engineer the ir codes of the remote. I've used an Arduino with an IR Receiver and the following lib: [IRLib](https://github.com/cyborg5/IRLib/)
+Just some code to control cheap chinese rgb led stripes. There is some code hidden which can be used
+to replace any ir remote control. It may be necessary to reverse engineer the ir codes of the
+remote. I've used an Arduino with an IR Receiver and the following lib:
+[IRLib](https://github.com/cyborg5/IRLib/)
 
 ```
 #include <IRLib.h>
