@@ -79,8 +79,8 @@ private constructor(
         }
 
         fun getTranslator(format: IrCodeFormat) = when (format) {
-            IrCodeFormat.NEC -> CodeTranslator.getNecTranslator()
-            IrCodeFormat.PANASONIC -> CodeTranslator.getPanasonicTranslator()
+            IrCodeFormat.NEC -> getNecTranslator()
+            IrCodeFormat.PANASONIC -> getPanasonicTranslator()
         }
 
         private fun getNecTranslator() = CodeTranslator(
