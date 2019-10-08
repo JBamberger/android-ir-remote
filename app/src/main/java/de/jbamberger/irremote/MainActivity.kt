@@ -8,10 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Button
-import android.widget.TableLayout
-import android.widget.TableRow
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import timber.log.Timber
 import java.io.IOException
@@ -94,6 +91,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initUi(def: RemoteParser.RemoteDefinition?) {
+        val handler = Handler()
         remoteLayout!!.removeAllViews()
         initMenu = true
         if (def == null) {
@@ -104,40 +102,41 @@ class MainActivity : AppCompatActivity() {
         for (row in def.layout.controls) {
             val tr = TableRow(this)
             for (control in row) {
-                val b = Button(this)
+                val button = Button(this)
                 if (control == null) {
-                    b.visibility = View.INVISIBLE
+                    button.visibility = View.INVISIBLE
                 } else {
-                    b.setOnTouchListener(object : View.OnTouchListener {
-                        private var handler: Handler? = null
-
+                    button.setOnTouchListener(object : View.OnTouchListener {
                         private val action = object : Runnable {
                             override fun run() {
                                 exec.execute { runIR(control.command) }
-                                handler!!.postDelayed(this, 300)
+                                handler.postDelayed(this, 300)
                             }
                         }
 
                         override fun onTouch(v: View, event: MotionEvent): Boolean {
-                            when (event.action) {
+                            return when (event.action) {
                                 MotionEvent.ACTION_DOWN -> {
-                                    if (handler != null) return true
-                                    handler = Handler()
-                                    handler!!.post(action)
+                                    handler.post(action)
+                                    true
                                 }
                                 MotionEvent.ACTION_UP -> {
-                                    if (handler == null) return true
-                                    handler!!.removeCallbacks(action)
-                                    handler = null
+                                    handler.removeCallbacks(action)
+                                    v.performClick()
+                                    true
                                 }
+                                MotionEvent.ACTION_CANCEL -> {
+                                    handler.removeCallbacks(action)
+                                    true
+                                }
+                                 else ->false
                             }
-                            return false
                         }
                     })
-                    b.tag = control.command
-                    b.text = control.name
+                    button.tag = control.command
+                    button.text = control.name
                 }
-                tr.addView(b)
+                tr.addView(button)
             }
             remoteLayout!!.addView(tr)
         }
