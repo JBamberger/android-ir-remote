@@ -1,12 +1,11 @@
 package de.jbamberger.irremote
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.hardware.ConsumerIrManager
 import android.os.*
-import android.view.Menu
-import android.view.MenuItem
-import android.view.MotionEvent
-import android.view.View
+import android.util.AttributeSet
+import android.view.*
 import android.widget.Button
 import android.widget.TableLayout
 import android.widget.TableRow
@@ -31,8 +30,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        startActivity(Intent(this, TestActivity::class.java))
-        return
+//        startActivity(Intent(this, TestActivity::class.java))
+//        return
 
         setContentView(R.layout.activity_main)
 
@@ -84,7 +83,7 @@ class MainActivity : AppCompatActivity() {
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         if (remotes != null) {
             menu.clear()
-            remotes!!.keys.forEach(Consumer<String> { menu.add(it) })
+            remotes!!.keys.forEach(Consumer { menu.add(it) })
         }
 
         return super.onPrepareOptionsMenu(menu)
@@ -104,6 +103,7 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, "Could not load remotes", Toast.LENGTH_LONG).show()
     }
 
+
     private fun initUi(def: RemoteParser.RemoteDefinition?) {
         remoteLayout!!.removeAllViews()
         initMenu = true
@@ -114,12 +114,19 @@ class MainActivity : AppCompatActivity() {
 
         for (row in def.layout.controls) {
             val tr = TableRow(this)
+            val params = TableLayout.LayoutParams(
+                    TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT, 1.0f)
+            tr.layoutParams = params
             for (control in row) {
                 val b = Button(this)
+                val buttonParams = TableRow.LayoutParams(
+                        TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f)
+                b.layoutParams = buttonParams
                 if (control == null) {
                     b.visibility = View.INVISIBLE
                 } else {
-                    b.setOnTouchListener(object : View.OnTouchListener {
+                    b.setOnTouchListener(
+                    object : View.OnTouchListener {
                         private var handler: Handler? = null
 
                         private val action = object : Runnable {
@@ -132,14 +139,16 @@ class MainActivity : AppCompatActivity() {
                         override fun onTouch(v: View, event: MotionEvent): Boolean {
                             when (event.action) {
                                 MotionEvent.ACTION_DOWN -> {
-                                    if (handler != null) return true
-                                    handler = Handler()
-                                    handler!!.post(action)
+                                    if (handler == null) {
+                                        handler = Handler()
+                                        handler!!.post(action)
+                                    }
+                                    return true
                                 }
-                                MotionEvent.ACTION_UP -> {
-                                    if (handler == null) return true
-                                    handler!!.removeCallbacks(action)
+                                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                                    handler?.removeCallbacks(action)
                                     handler = null
+                                    return true
                                 }
                             }
                             return false
@@ -150,7 +159,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 tr.addView(b)
             }
-            remoteLayout!!.addView(tr)
+            with(remoteLayout!!) {
+                isMeasureWithLargestChildEnabled = true
+                addView(tr)
+            }
         }
     }
 

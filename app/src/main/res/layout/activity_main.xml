@@ -3,8 +3,8 @@
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:stretchColumns="true"
-    android:shrinkColumns="true"
+    android:stretchColumns="*"
+    android:shrinkColumns="*"
     tools:context=".MainActivity">
 
 
