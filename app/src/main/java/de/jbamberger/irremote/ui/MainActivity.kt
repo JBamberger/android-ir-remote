@@ -1,11 +1,14 @@
 package de.jbamberger.irremote.ui
 
+import android.content.Intent
 import android.hardware.ConsumerIrManager
 import android.os.*
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import de.jbamberger.irremote.R
+import de.jbamberger.irremote.remote.IrRemoteProvider
+import de.jbamberger.irremote.remote.MissingHardwareFeatureException
 import de.jbamberger.irremote.remote.RemoteParser
 import de.jbamberger.irremote.remote.Utils
 import timber.log.Timber
@@ -16,85 +19,44 @@ import java.util.function.Consumer
 
 class MainActivity : AppCompatActivity() {
 
-    private var remotes: Map<String, RemoteParser.RemoteDefinition>? = null
     private val exec = Executors.newSingleThreadExecutor()
     private var remoteLayout: TableLayout? = null
-    private var commands: RemoteParser.IrDef? = null
     private var initMenu = false
-    private var irManager: ConsumerIrManager? = null
-    private lateinit var vibrator: Vibrator
+    private var remoteProvider: IrRemoteProvider? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        startActivity(Intent(this, TestActivity::class.java))
+//        startActivity(Intent(this, RemoteActivity::class.java))
 //        return
 
         setContentView(R.layout.activity_main)
 
         remoteLayout = findViewById(R.id.main_layout)
-        irManager = this.getSystemService(ConsumerIrManager::class.java)
-        vibrator = this.getSystemService(Vibrator::class.java)
         val errorText = findViewById<TextView>(R.id.error_text)
 
-        if (irManager == null || !irManager!!.hasIrEmitter()) {
-            Toast.makeText(this, "This device does not support infrared communication.",
-                    Toast.LENGTH_LONG).show()
-        } else {
+        try {
+            remoteProvider = IrRemoteProvider(this)
             errorText.visibility = View.GONE
-            loadRemotes()
-        }
-
-    }
-
-    fun runIR(command: String) {
-        val frequency = commands!!.frequency
-        val code = commands!!.codeMap[command]
-        exec.execute {
-            val irManager = this.irManager ?: return@execute
-
-            val range = irManager.carrierFrequencies
-            for (carrierFrequencyRange in range) {
-                if (carrierFrequencyRange.minFrequency <= frequency
-                        && frequency <= carrierFrequencyRange.maxFrequency) {
-                    if (vibrator.hasVibrator()) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            vibrator.vibrate(VibrationEffect.createOneShot(
-                                    50, VibrationEffect.DEFAULT_AMPLITUDE))
-                        } else {
-                            @Suppress("DEPRECATION")
-                            vibrator.vibrate(50)
-                        }
-                    }
-                    irManager.transmit(frequency, code)
-                    return@execute
-                }
-            }
-            Timber.d("The required frequency range is not supported.")
-
+        } catch (e: MissingHardwareFeatureException) {
+            errorText.visibility = View.VISIBLE
         }
     }
 
-    private fun onRemotesReady(remotes: Map<String, RemoteParser.RemoteDefinition>) {
-        this.remotes = remotes
-    }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        if (remotes != null) {
+        remoteProvider?.getRemotes()?.let { remotes ->
             menu.clear()
-            remotes!!.keys.forEach(Consumer { menu.add(it) })
-        }
+            remotes.keys.forEach(Consumer { menu.add(it) })
 
+        }
         return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (remotes != null) {
-            val definition = remotes!![item.title.toString()]
-            initUi(definition)
-        }
-
-
+        val definition = remoteProvider?.getRemotes()?.get(item.title.toString())
+        initUi(definition)
         return super.onOptionsItemSelected(item)
     }
 
@@ -103,15 +65,14 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun initUi(def: RemoteParser.RemoteDefinition?) {
+    private fun initUi(remoteDefinition: RemoteParser.RemoteDefinition?) {
         remoteLayout!!.removeAllViews()
         initMenu = true
-        if (def == null) {
+        if (remoteDefinition == null) {
             return
         }
-        this.commands = def.commandDefs
 
-        for (row in def.layout.controls) {
+        for (row in remoteDefinition.layout.controls) {
             val tr = TableRow(this)
             val params = TableLayout.LayoutParams(
                     TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT, 1.0f)
@@ -125,34 +86,34 @@ class MainActivity : AppCompatActivity() {
                     b.visibility = View.INVISIBLE
                 } else {
                     b.setOnTouchListener(
-                    object : View.OnTouchListener {
-                        private var handler: Handler? = null
+                            object : View.OnTouchListener {
+                                private var handler: Handler? = null
 
-                        private val action = object : Runnable {
-                            override fun run() {
-                                exec.execute { runIR(control.command) }
-                                handler!!.postDelayed(this, 300)
-                            }
-                        }
-
-                        override fun onTouch(v: View, event: MotionEvent): Boolean {
-                            when (event.action) {
-                                MotionEvent.ACTION_DOWN -> {
-                                    if (handler == null) {
-                                        handler = Handler(Looper.getMainLooper())
-                                        handler!!.post(action)
+                                private val action = object : Runnable {
+                                    override fun run() {
+                                        exec.execute { remoteProvider?.sendIrCode(remoteDefinition.commandDefs, control.command) }
+                                        handler!!.postDelayed(this, 300)
                                     }
-                                    return true
                                 }
-                                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                                    handler?.removeCallbacks(action)
-                                    handler = null
-                                    return true
+
+                                override fun onTouch(v: View, event: MotionEvent): Boolean {
+                                    when (event.action) {
+                                        MotionEvent.ACTION_DOWN -> {
+                                            if (handler == null) {
+                                                handler = Handler(Looper.getMainLooper())
+                                                handler!!.post(action)
+                                            }
+                                            return true
+                                        }
+                                        MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                                            handler?.removeCallbacks(action)
+                                            handler = null
+                                            return true
+                                        }
+                                    }
+                                    return false
                                 }
-                            }
-                            return false
-                        }
-                    })
+                            })
                     b.tag = control.command
                     b.text = control.name
                 }
@@ -162,19 +123,6 @@ class MainActivity : AppCompatActivity() {
                 isMeasureWithLargestChildEnabled = true
                 addView(tr)
             }
-        }
-    }
-
-    private fun loadRemotes() = exec.execute {
-        try {
-            resources.openRawResource(R.raw.remotes)
-                    .use {
-                        val remotes = RemoteParser().parse(Utils.readString(it))
-                        runOnUiThread { onRemotesReady(remotes) }
-                    }
-        } catch (e: IOException) {
-            e.printStackTrace()
-            runOnUiThread { this.onRemotesLoadingFailed() }
         }
     }
 }
