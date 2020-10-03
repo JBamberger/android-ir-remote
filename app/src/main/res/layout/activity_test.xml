@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="addButton"
-        android:text="add button" />
+        android:text="@string/action_add_button" />
 
     <de.jbamberger.irremote.RemoteBaseView
         android:id="@+id/remoteBase"

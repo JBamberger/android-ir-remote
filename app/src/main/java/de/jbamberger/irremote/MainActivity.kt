@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         val errorText = findViewById<TextView>(R.id.error_text)
 
         if (irManager == null || !irManager!!.hasIrEmitter()) {
-            Toast.makeText(this, "This device does not support Infrared communication.",
+            Toast.makeText(this, "This device does not support infrared communication.",
                     Toast.LENGTH_LONG).show()
         } else {
             errorText.visibility = View.GONE
