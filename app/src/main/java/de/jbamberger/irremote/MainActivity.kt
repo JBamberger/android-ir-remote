@@ -6,10 +6,7 @@ import android.hardware.ConsumerIrManager
 import android.os.*
 import android.util.AttributeSet
 import android.view.*
-import android.widget.Button
-import android.widget.TableLayout
-import android.widget.TableRow
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import timber.log.Timber
 import java.io.IOException
@@ -38,11 +35,13 @@ class MainActivity : AppCompatActivity() {
         remoteLayout = findViewById(R.id.main_layout)
         irManager = this.getSystemService(ConsumerIrManager::class.java)
         vibrator = this.getSystemService(Vibrator::class.java)
+        val errorText = findViewById<TextView>(R.id.error_text)
 
         if (irManager == null || !irManager!!.hasIrEmitter()) {
             Toast.makeText(this, "This device does not support Infrared communication.",
                     Toast.LENGTH_LONG).show()
         } else {
+            errorText.visibility = View.GONE
             loadRemotes()
         }
 
@@ -140,7 +139,7 @@ class MainActivity : AppCompatActivity() {
                             when (event.action) {
                                 MotionEvent.ACTION_DOWN -> {
                                     if (handler == null) {
-                                        handler = Handler()
+                                        handler = Handler(Looper.getMainLooper())
                                         handler!!.post(action)
                                     }
                                     return true
