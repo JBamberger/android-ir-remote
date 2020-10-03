@@ -1,14 +1,11 @@
 #include <IRLibDecodeBase.h>
+
 #include <IRLib_P01_NEC.h>
-// #include <IRLib_P02_Sony.h>
-// #include <IRLib_P07_NECx.h>
-// #include <IRLib_P09_GICable.h>
-// #include <IRLib_P11_RCMM.h>
 #include <IRLibCombo.h>
 IRdecode myDecoder;
 
 #include <IRLibRecv.h>
-IRrecv myReceiver(11);
+IRrecv myReceiver(2);
 
 #include <rgb_stripe.h>
 
@@ -101,7 +98,7 @@ ConstantColorEffect red_effect(RED);
 ConstantColorEffect green_effect(GREEN);
 ConstantColorEffect blue_effect(BLUE);
 
-RgbController light_controller(2, 3, 4, &off_effect, false);
+RgbController light_controller(3, 4, 5, &off_effect, false);
 
 int color = 0;
 
