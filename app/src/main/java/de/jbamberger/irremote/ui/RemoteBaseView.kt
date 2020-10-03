@@ -1,4 +1,4 @@
-package de.jbamberger.irremote
+package de.jbamberger.irremote.ui
 
 import android.content.Context
 import android.graphics.Canvas

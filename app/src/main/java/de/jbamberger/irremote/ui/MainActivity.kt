@@ -1,13 +1,13 @@
-package de.jbamberger.irremote
+package de.jbamberger.irremote.ui
 
-import android.annotation.SuppressLint
-import android.content.Intent
 import android.hardware.ConsumerIrManager
 import android.os.*
-import android.util.AttributeSet
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import de.jbamberger.irremote.R
+import de.jbamberger.irremote.remote.RemoteParser
+import de.jbamberger.irremote.remote.Utils
 import timber.log.Timber
 import java.io.IOException
 import java.util.concurrent.Executors

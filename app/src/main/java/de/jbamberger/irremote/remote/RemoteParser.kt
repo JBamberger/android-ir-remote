@@ -1,6 +1,6 @@
-package de.jbamberger.irremote
+package de.jbamberger.irremote.remote
 
-import de.jbamberger.irremote.CodeTranslator.Companion.IrCodeFormat.valueOf
+import de.jbamberger.irremote.remote.CodeTranslator.Companion.IrCodeFormat.valueOf
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*

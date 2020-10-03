@@ -1,6 +1,6 @@
-package de.jbamberger.irremote
+package de.jbamberger.irremote.remote
 
-import de.jbamberger.irremote.Utils.hexToBytes
+import de.jbamberger.irremote.remote.Utils.hexToBytes
 import kotlin.experimental.inv
 
 /**
@@ -79,8 +79,8 @@ private constructor(
         }
 
         fun getTranslator(format: IrCodeFormat) = when (format) {
-            IrCodeFormat.NEC -> CodeTranslator.getNecTranslator()
-            IrCodeFormat.PANASONIC -> CodeTranslator.getPanasonicTranslator()
+            IrCodeFormat.NEC -> getNecTranslator()
+            IrCodeFormat.PANASONIC -> getPanasonicTranslator()
         }
 
         private fun getNecTranslator() = CodeTranslator(
