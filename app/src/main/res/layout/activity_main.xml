@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="No infrared emitter available. The application requires an IR blaster."
+        android:text="@string/error_ir_not_available"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TableLayout

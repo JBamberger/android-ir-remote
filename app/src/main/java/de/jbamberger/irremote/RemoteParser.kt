@@ -21,7 +21,7 @@ class RemoteParser {
         companion object {
             private fun buildCodeMap(
                     codeFormat: String, codeMap: JSONObject): Map<String, IntArray> {
-                val translator = CodeTranslator.getTranslator(valueOf(codeFormat.toUpperCase()))
+                val translator = CodeTranslator.getTranslator(valueOf(codeFormat.toUpperCase(Locale.ROOT)))
 
                 return codeMap.toStringMap()
                         .map { (key, value) -> key to translator.buildCode(value) }
@@ -87,13 +87,11 @@ class RemoteParser {
         }
     }
 
-    fun parse(s: String): Map<String, RemoteParser.RemoteDefinition> {
-        val remoteMap: MutableMap<String, RemoteParser.RemoteDefinition> = HashMap()
+    fun parse(s: String): Map<String, RemoteDefinition> {
+        val remoteMap: MutableMap<String, RemoteDefinition> = HashMap()
         val remotes = JSONObject(s)
         val names = remotes.names() ?: return emptyMap()
-        names.forEachString {
-            remoteMap[it] = RemoteParser.RemoteDefinition.fromJson(remotes.getJSONObject(it))
-        }
+        names.forEachString { remoteMap[it] = RemoteDefinition.fromJson(remotes.getJSONObject(it)) }
         return remoteMap
     }
 
