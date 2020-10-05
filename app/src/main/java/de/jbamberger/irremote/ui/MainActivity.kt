@@ -1,5 +1,6 @@
 package de.jbamberger.irremote.ui
 
+import android.content.Intent
 import android.os.*
 import android.view.*
 import android.widget.*
@@ -20,8 +21,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        startActivity(Intent(this, RemoteActivity::class.java))
-//        return
+        startActivity(Intent(this, RemoteActivity::class.java))
+        return
 
         setContentView(R.layout.activity_main)
 

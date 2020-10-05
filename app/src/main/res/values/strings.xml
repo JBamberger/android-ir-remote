@@ -5,4 +5,5 @@
     <string name="tile_name_power">LED Power</string>
     <string name="error_ir_not_available">No infrared emitter available. The application requires an IR blaster.</string>
     <string name="action_add_button">Add button</string>
+    <string name="title_activity_remote">RemoteActivity</string>
 </resources>
