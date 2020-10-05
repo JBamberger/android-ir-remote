@@ -24,13 +24,13 @@ class RepeatListener(repetitionDelay: Int, initialDelay: Int = -1) : OnTouchList
     private var touchedView: View? = null
     private val handlerRunnable: Runnable = object : Runnable {
         override fun run() {
-            if (touchedView!!.isEnabled) {
+            if (touchedView!!.isPressed && touchedView!!.isEnabled) {
                 handler.postDelayed(this, repetitionDelay.toLong())
                 touchedView!!.performClick()
             } else {
                 // if the view was disabled by the clickListener, remove the callback
                 handler.removeCallbacks(this)
-                touchedView!!.isPressed = false
+                touchedView?.isPressed = false
                 touchedView = null
             }
         }
@@ -48,7 +48,7 @@ class RepeatListener(repetitionDelay: Int, initialDelay: Int = -1) : OnTouchList
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 handler.removeCallbacks(handlerRunnable)
-                touchedView!!.isPressed = false
+                touchedView?.isPressed = false
                 touchedView = null
                 return true
             }
