@@ -11,7 +11,7 @@ class IrRemoteProvider(context: Context) {
 
     private val irManager: ConsumerIrManager
     private val vibrator: VibratorWrapper
-    private val remotes: Map<String, RemoteParser.RemoteDefinition>
+    private val remotes: Map<String, RemoteDefinition>
 
     init {
         irManager = context.getSystemService(ConsumerIrManager::class.java)
@@ -28,11 +28,11 @@ class IrRemoteProvider(context: Context) {
         }
     }
 
-    fun getRemotes(): Map<String, RemoteParser.RemoteDefinition> {
+    fun getRemotes(): Map<String, RemoteDefinition> {
         return remotes
     }
 
-    fun sendIrCode(commandDefinitions: RemoteParser.IrDef, command: String) {
+    fun sendIrCode(commandDefinitions: IrDef, command: String) {
         val code = commandDefinitions.codeMap[command]
                 ?: throw IllegalArgumentException("Unknown command name $command.")
         val frequency = commandDefinitions.frequency
