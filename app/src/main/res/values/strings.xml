@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LEDIRRemote</string>
+    <string name="app_name">IrRemote</string>
     <string name="action_settings">Settings</string>
     <string name="service_name_control">IRRemoteService</string>
     <string name="tile_name_power">LED Power</string>

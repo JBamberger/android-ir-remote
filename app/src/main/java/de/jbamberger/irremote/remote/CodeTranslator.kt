@@ -1,6 +1,7 @@
-package de.jbamberger.irremote
+package de.jbamberger.irremote.remote
 
-import de.jbamberger.irremote.Utils.hexToBytes
+import de.jbamberger.irremote.remote.Utils.hexToBytes
+import java.util.*
 import kotlin.experimental.inv
 
 /**
@@ -60,9 +61,10 @@ private constructor(
     }
 
     companion object {
-        public enum class IrCodeFormat{
+        public enum class IrCodeFormat {
             NEC, PANASONIC
         }
+
         /**
          * This method injects the inverse of every byte into the array. {a, b} becomes {a, ~a, b, ~b}.
          *
@@ -79,9 +81,12 @@ private constructor(
         }
 
         fun getTranslator(format: IrCodeFormat) = when (format) {
-            IrCodeFormat.NEC -> CodeTranslator.getNecTranslator()
-            IrCodeFormat.PANASONIC -> CodeTranslator.getPanasonicTranslator()
+            IrCodeFormat.NEC -> getNecTranslator()
+            IrCodeFormat.PANASONIC -> getPanasonicTranslator()
         }
+
+        fun getTranslator(format: String) =
+                getTranslator(IrCodeFormat.valueOf(format.toUpperCase(Locale.ROOT)))
 
         private fun getNecTranslator() = CodeTranslator(
                 initSequence = intArrayOf(9000, 4500),

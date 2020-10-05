@@ -1,4 +1,4 @@
-package de.jbamberger.irremote
+package de.jbamberger.irremote.remote
 
 import java.io.IOException
 import java.io.InputStream

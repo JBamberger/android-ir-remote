@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".TestActivity">
+    tools:context=".ui.TestActivity">
 
     <Button
         android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         android:onClick="addButton"
         android:text="@string/action_add_button" />
 
-    <de.jbamberger.irremote.RemoteBaseView
+    <de.jbamberger.irremote.ui.RemoteBaseView
         android:id="@+id/remoteBase"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
