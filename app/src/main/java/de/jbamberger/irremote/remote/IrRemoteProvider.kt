@@ -1,17 +1,39 @@
 package de.jbamberger.irremote.remote
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.hardware.ConsumerIrManager
 import de.jbamberger.irremote.R
 import timber.log.Timber
 
 class MissingHardwareFeatureException(message: String?) : Exception(message)
 
+data class IrRemote(
+        private val remoteDef: RemoteDefinition,
+        private val irManager: ConsumerIrManager,
+        private val vibrator: VibratorWrapper) {
+
+    val layout: IrRemoteLayout
+        get() = remoteDef.layout
+    val commandDefs: IrCommandSet
+        get() = remoteDef.commandDefs
+
+    fun sendCommand(command: String) {
+        val code = remoteDef.commandDefs.codeMap[command]
+                ?: throw IllegalArgumentException("Unknown command name $command.")
+        val frequency = remoteDef.commandDefs.frequency
+
+        vibrator.vibrate()
+        irManager.transmit(frequency, code)
+        Timber.d("The required frequency range is not supported.")
+    }
+}
+
 class IrRemoteProvider(context: Context) {
 
     private val irManager: ConsumerIrManager
     private val vibrator: VibratorWrapper
-    private val remotes: Map<String, RemoteDefinition>
+    private val remotes: Map<String, IrRemote>
 
     init {
         irManager = context.getSystemService(ConsumerIrManager::class.java)
@@ -25,21 +47,12 @@ class IrRemoteProvider(context: Context) {
             remotes = RemoteParser()
                     .parse(Utils.readString(it))
                     .filter { entry -> isFrequencySupported(entry.value.commandDefs.frequency) }
+                    .mapValues { entry -> IrRemote(entry.value, irManager, vibrator) }
         }
     }
 
-    fun getRemotes(): Map<String, RemoteDefinition> {
+    fun getRemotes(): Map<String, IrRemote> {
         return remotes
-    }
-
-    fun sendIrCode(commandDefinitions: IrDef, command: String) {
-        val code = commandDefinitions.codeMap[command]
-                ?: throw IllegalArgumentException("Unknown command name $command.")
-        val frequency = commandDefinitions.frequency
-
-        vibrator.vibrate()
-        irManager.transmit(frequency, code)
-        Timber.d("The required frequency range is not supported.")
     }
 
     private fun isFrequencySupported(frequency: Int): Boolean {

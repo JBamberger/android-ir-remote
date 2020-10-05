@@ -27,26 +27,27 @@ class RemoteParser {
 }
 
 
-data class Control(val name: String, val command: String) {
+data class IrRemoteKey(val name: String, val command: String) {
     companion object {
-        fun fromJson(obj: JSONObject) =
-                Control(obj.getString("name"), obj.getString("command"))
+        fun fromJson(obj: JSONObject) = IrRemoteKey(obj.getString("name"), obj.getString("command"))
     }
 }
 
-data class LayoutDef(val width: Int, val height: Int, val controls: Array<Array<Control?>>) {
+data class IrRemoteLayout(val width: Int, val height: Int, val keys: Array<Array<IrRemoteKey?>>) {
 
     init {
-        if (height != controls.size) {
-            throw IllegalStateException("Expected size $height but got ${controls.size}")
+        if (height != keys.size) {
+            throw IllegalStateException("Expected size $height but got ${keys.size}")
         }
     }
 
     companion object {
-        fun fromJson(obj: JSONObject) = LayoutDef(
-                obj.getInt("width"), obj.getInt("height"),
+        fun fromJson(obj: JSONObject) = IrRemoteLayout(
+                obj.getInt("width"),
+                obj.getInt("height"),
                 obj.getJSONArray("elements")
-                        .mapArr { row -> row.mapObj { it?.run { Control.fromJson(this) } } })
+                        .mapArr { row -> row.mapObj { it?.run { IrRemoteKey.fromJson(this) } } }
+        )
 
         private inline fun <reified T> JSONArray.mapArr(operation: (JSONArray) -> T) =
                 Array(length()) { operation.invoke(getJSONArray(it)) }
@@ -58,11 +59,11 @@ data class LayoutDef(val width: Int, val height: Int, val controls: Array<Array<
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is LayoutDef) return false
+        if (other !is IrRemoteLayout) return false
 
         if (width != other.width) return false
         if (height != other.height) return false
-        if (!controls.contentDeepEquals(other.controls)) return false
+        if (!keys.contentDeepEquals(other.keys)) return false
 
         return true
     }
@@ -70,12 +71,12 @@ data class LayoutDef(val width: Int, val height: Int, val controls: Array<Array<
     override fun hashCode(): Int {
         var result = width
         result = 31 * result + height
-        result = 31 * result + controls.contentDeepHashCode()
+        result = 31 * result + keys.contentDeepHashCode()
         return result
     }
 }
 
-data class IrDef(val frequency: Int, val codeMap: Map<String, IntArray>) {
+data class IrCommandSet(val frequency: Int, val codeMap: Map<String, IntArray>) {
     companion object {
         private fun buildCodeMap(
                 codeFormat: String, codeMap: JSONObject): Map<String, IntArray> {
@@ -92,15 +93,18 @@ data class IrDef(val frequency: Int, val codeMap: Map<String, IntArray>) {
             return map
         }
 
-        fun fromJson(obj: JSONObject) = IrDef(obj.getInt("frequency"), buildCodeMap(
-                obj.getString("codeFormat"), obj.getJSONObject("codeMap")))
+        fun fromJson(obj: JSONObject) = IrCommandSet(
+                obj.getInt("frequency"),
+                buildCodeMap(obj.getString("codeFormat"), obj.getJSONObject("codeMap"))
+        )
     }
 }
 
-data class RemoteDefinition(val layout: LayoutDef, val commandDefs: IrDef) {
+data class RemoteDefinition(val layout: IrRemoteLayout, val commandDefs: IrCommandSet) {
     companion object {
         fun fromJson(remoteObj: JSONObject) = RemoteDefinition(
-                LayoutDef.fromJson(remoteObj.getJSONObject("layout")),
-                IrDef.fromJson(remoteObj.getJSONObject("irDef")))
+                IrRemoteLayout.fromJson(remoteObj.getJSONObject("layout")),
+                IrCommandSet.fromJson(remoteObj.getJSONObject("irDef"))
+        )
     }
 }

@@ -1,21 +1,18 @@
 package de.jbamberger.irremote.ui
 
-import android.hardware.ConsumerIrManager
 import android.os.*
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import de.jbamberger.irremote.R
 import de.jbamberger.irremote.remote.*
-import timber.log.Timber
-import java.io.IOException
 import java.util.concurrent.Executors
 import java.util.function.Consumer
 
 
 class MainActivity : AppCompatActivity() {
 
-    private val exec = Executors.newSingleThreadExecutor()
+
     private var remoteLayout: TableLayout? = null
     private var remoteProvider: IrRemoteProvider? = null
 
@@ -55,44 +52,12 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun initUi(remoteDefinition: RemoteDefinition?) {
-        if (remoteDefinition == null) {
+    private fun initUi(remote: IrRemote?) {
+        if (remote == null) {
             return
         }
-        inflateRemoteLayout(remoteLayout!!, remoteDefinition)
+        val inflater = IrRemoteUiInflater(remote)
+        inflater.inflate(remoteLayout!!)
     }
 
-    private fun inflateRemoteLayout(remoteLayout: TableLayout, remoteDefinition: RemoteDefinition) {
-        remoteLayout.removeAllViews()
-
-        for (row in remoteDefinition.layout.controls) {
-            val tr = TableRow(this)
-            val params = TableLayout.LayoutParams(
-                    TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT, 1.0f)
-            tr.layoutParams = params
-            for (control in row) {
-                val b = Button(this)
-                val buttonParams = TableRow.LayoutParams(
-                        TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f)
-                b.layoutParams = buttonParams
-                if (control == null) {
-                    b.visibility = View.INVISIBLE
-                } else {
-                    b.setOnTouchListener(RepeatListener(300, initialDelay = 700))
-                    b.setOnClickListener {
-                        exec.execute {
-                            remoteProvider?.sendIrCode(remoteDefinition.commandDefs, control.command)
-                        }
-                    }
-                    b.tag = control.command
-                    b.text = control.name
-                }
-                tr.addView(b)
-            }
-            with(remoteLayout) {
-                isMeasureWithLargestChildEnabled = true
-                addView(tr)
-            }
-        }
-    }
 }
