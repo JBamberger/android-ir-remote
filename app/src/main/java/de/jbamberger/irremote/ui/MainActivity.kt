@@ -1,16 +1,12 @@
 package de.jbamberger.irremote.ui
 
-import android.content.Intent
 import android.hardware.ConsumerIrManager
 import android.os.*
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import de.jbamberger.irremote.R
-import de.jbamberger.irremote.remote.IrRemoteProvider
-import de.jbamberger.irremote.remote.MissingHardwareFeatureException
-import de.jbamberger.irremote.remote.RemoteParser
-import de.jbamberger.irremote.remote.Utils
+import de.jbamberger.irremote.remote.*
 import timber.log.Timber
 import java.io.IOException
 import java.util.concurrent.Executors
@@ -21,7 +17,6 @@ class MainActivity : AppCompatActivity() {
 
     private val exec = Executors.newSingleThreadExecutor()
     private var remoteLayout: TableLayout? = null
-    private var initMenu = false
     private var remoteProvider: IrRemoteProvider? = null
 
 
@@ -60,17 +55,15 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun onRemotesLoadingFailed() {
-        Toast.makeText(this, "Could not load remotes", Toast.LENGTH_LONG).show()
-    }
-
-
-    private fun initUi(remoteDefinition: RemoteParser.RemoteDefinition?) {
-        remoteLayout!!.removeAllViews()
-        initMenu = true
+    private fun initUi(remoteDefinition: RemoteDefinition?) {
         if (remoteDefinition == null) {
             return
         }
+        inflateRemoteLayout(remoteLayout!!, remoteDefinition)
+    }
+
+    private fun inflateRemoteLayout(remoteLayout: TableLayout, remoteDefinition: RemoteDefinition) {
+        remoteLayout.removeAllViews()
 
         for (row in remoteDefinition.layout.controls) {
             val tr = TableRow(this)
@@ -85,41 +78,18 @@ class MainActivity : AppCompatActivity() {
                 if (control == null) {
                     b.visibility = View.INVISIBLE
                 } else {
-                    b.setOnTouchListener(
-                            object : View.OnTouchListener {
-                                private var handler: Handler? = null
-
-                                private val action = object : Runnable {
-                                    override fun run() {
-                                        exec.execute { remoteProvider?.sendIrCode(remoteDefinition.commandDefs, control.command) }
-                                        handler!!.postDelayed(this, 300)
-                                    }
-                                }
-
-                                override fun onTouch(v: View, event: MotionEvent): Boolean {
-                                    when (event.action) {
-                                        MotionEvent.ACTION_DOWN -> {
-                                            if (handler == null) {
-                                                handler = Handler(Looper.getMainLooper())
-                                                handler!!.post(action)
-                                            }
-                                            return true
-                                        }
-                                        MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                                            handler?.removeCallbacks(action)
-                                            handler = null
-                                            return true
-                                        }
-                                    }
-                                    return false
-                                }
-                            })
+                    b.setOnTouchListener(RepeatListener(300, initialDelay = 700))
+                    b.setOnClickListener {
+                        exec.execute {
+                            remoteProvider?.sendIrCode(remoteDefinition.commandDefs, control.command)
+                        }
+                    }
                     b.tag = control.command
                     b.text = control.name
                 }
                 tr.addView(b)
             }
-            with(remoteLayout!!) {
+            with(remoteLayout) {
                 isMeasureWithLargestChildEnabled = true
                 addView(tr)
             }
