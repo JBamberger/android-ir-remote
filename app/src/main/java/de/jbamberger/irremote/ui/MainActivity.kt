@@ -5,6 +5,9 @@ import android.os.*
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.tabs.TabLayout
 import de.jbamberger.irremote.R
 import de.jbamberger.irremote.remote.*
 import java.util.concurrent.Executors
@@ -13,52 +16,31 @@ import java.util.function.Consumer
 
 class MainActivity : AppCompatActivity() {
 
-
-    private var remoteLayout: TableLayout? = null
     private var remoteProvider: IrRemoteProvider? = null
-
+    private lateinit var viewModel: IrRemotesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_remote)
 
-        startActivity(Intent(this, RemoteActivity::class.java))
-        return
-
-        setContentView(R.layout.activity_main)
-
-        remoteLayout = findViewById(R.id.main_layout)
-        val errorText = findViewById<TextView>(R.id.error_text)
+        viewModel = ViewModelProvider(this).get(IrRemotesViewModel::class.java)
 
         try {
             remoteProvider = IrRemoteProvider(this)
-            errorText.visibility = View.GONE
+            viewModel.remotes = remoteProvider!!.getRemotes()
         } catch (e: MissingHardwareFeatureException) {
-            errorText.visibility = View.VISIBLE
-        }
-    }
-
-
-    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        remoteProvider?.getRemotes()?.let { remotes ->
-            menu.clear()
-            remotes.keys.forEach(Consumer { menu.add(it) })
-
-        }
-        return super.onPrepareOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val definition = remoteProvider?.getRemotes()?.get(item.title.toString())
-        initUi(definition)
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun initUi(remote: IrRemote?) {
-        if (remote == null) {
+            // TODO: add appropriate error handling
+            e.printStackTrace()
             return
         }
-        val inflater = IrRemoteUiInflater(remote)
-        inflater.inflate(remoteLayout!!)
-    }
 
+        val sectionsPagerAdapter = RemotesPagerAdapter(this, supportFragmentManager)
+        sectionsPagerAdapter.setRemotes(remoteProvider!!.getRemotes())
+
+        val viewPager: ViewPager = findViewById(R.id.view_pager)
+        viewPager.adapter = sectionsPagerAdapter
+
+        val tabs: TabLayout = findViewById(R.id.tabs)
+        tabs.setupWithViewPager(viewPager)
+    }
 }
