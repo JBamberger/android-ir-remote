@@ -1,4 +1,4 @@
-package de.jbamberger.irremote
+package de.jbamberger.irremote.util
 
 import java.io.IOException
 import java.io.InputStream
@@ -8,12 +8,7 @@ import kotlin.experimental.and
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
-object Utils {
-
-    @Throws(IOException::class)
-    fun readString(inputStream: InputStream): String {
-        return String(inputStream.readBytes(), StandardCharsets.UTF_8)
-    }
+object HexUtils {
 
     /**
      * Creates a byte representation of a hexadecimal string.

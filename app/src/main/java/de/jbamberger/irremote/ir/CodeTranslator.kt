@@ -1,6 +1,7 @@
-package de.jbamberger.irremote
+package de.jbamberger.irremote.ir
 
-import de.jbamberger.irremote.Utils.hexToBytes
+import de.jbamberger.irremote.util.HexUtils
+import de.jbamberger.irremote.util.HexUtils.hexToBytes
 import kotlin.experimental.inv
 
 /**
@@ -60,9 +61,6 @@ private constructor(
     }
 
     companion object {
-        public enum class IrCodeFormat{
-            NEC, PANASONIC
-        }
         /**
          * This method injects the inverse of every byte into the array. {a, b} becomes {a, ~a, b, ~b}.
          *
@@ -97,6 +95,7 @@ private constructor(
                 zero = intArrayOf(432, 432),
                 one = intArrayOf(432, 1296),
                 frequency = 37000,
-                transform = Utils::hexToBytes)
+                transform = HexUtils::hexToBytes)
     }
+
 }
