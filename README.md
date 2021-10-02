@@ -1,5 +1,5 @@
 # Android Infrared Remote Control
-![Build status](https://github.com/jbamberger/android-ir-remote/workflows/Gradle%20build/badge.svg)
+[![Android CI](https://github.com/JBamberger/android-ir-remote/actions/workflows/android.yml/badge.svg)](https://github.com/JBamberger/android-ir-remote/actions/workflows/android.yml)
 
 This repository contains a prototypical implementation of an infrared remote control. The App uses
 the integrated IR blaster of the phone to mimic the original ir codes. The IR codes must be

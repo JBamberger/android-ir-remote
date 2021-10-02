@@ -1,7 +1,7 @@
 package de.jbamberger.irremote.ui
 
 import android.os.Bundle
-import android.view.View
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import de.jbamberger.irremote.R
 
@@ -14,9 +14,10 @@ class TestActivity : AppCompatActivity() {
         setContentView(R.layout.activity_test)
 
         remoteBase = findViewById(R.id.remoteBase)
-    }
 
-    fun addButton(view: View) {
-        remoteBase.addBtn(100f, 100f)
+        val addButtonButton = findViewById<Button>(R.id.addButtonButton)
+        addButtonButton.setOnClickListener {
+            remoteBase.addBtn(100f, 100f)
+        }
     }
 }

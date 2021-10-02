@@ -86,7 +86,7 @@ private constructor(
         }
 
         fun getTranslator(format: String) =
-                getTranslator(IrCodeFormat.valueOf(format.toUpperCase(Locale.ROOT)))
+                getTranslator(IrCodeFormat.valueOf(format.uppercase(Locale.ROOT)))
 
         private fun getNecTranslator() = CodeTranslator(
                 initSequence = intArrayOf(9000, 4500),
