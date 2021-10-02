@@ -1,17 +1,14 @@
 package de.jbamberger.irremote.ui
 
-import android.content.Intent
-import android.os.*
-import android.view.*
-import android.widget.*
+import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import de.jbamberger.irremote.R
-import de.jbamberger.irremote.remote.*
-import java.util.concurrent.Executors
-import java.util.function.Consumer
+import de.jbamberger.irremote.remote.IrRemoteProvider
+import de.jbamberger.irremote.remote.MissingHardwareFeatureException
 
 
 class MainActivity : AppCompatActivity() {
@@ -34,13 +31,16 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        val sectionsPagerAdapter = RemotesPagerAdapter(this, supportFragmentManager)
+        val sectionsPagerAdapter = RemotesPagerAdapter(supportFragmentManager, lifecycle)
         sectionsPagerAdapter.setRemotes(remoteProvider!!.getRemotes())
 
-        val viewPager: ViewPager = findViewById(R.id.view_pager)
+        val viewPager: ViewPager2 = findViewById(R.id.view_pager)
         viewPager.adapter = sectionsPagerAdapter
 
-        val tabs: TabLayout = findViewById(R.id.tabs)
-        tabs.setupWithViewPager(viewPager)
+        val tabLayout: TabLayout = findViewById(R.id.tabs)
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = sectionsPagerAdapter.getPageTitle(position)
+        }.attach()
+
     }
 }

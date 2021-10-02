@@ -21,8 +21,10 @@ class RemoteUiFragment : Fragment() {
         remote = irRemotesViewModel.getRemote(remoteName)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val root = inflater.inflate(R.layout.fragment_remote, container, false)
 
         remote?.let {
