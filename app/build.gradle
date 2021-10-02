@@ -1,6 +1,5 @@
 apply plugin: "com.android.application"
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
@@ -12,7 +11,6 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
     }
     buildTypes {
         release {
@@ -20,8 +18,8 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
-    buildFeatures{
-        dataBinding=true
+    buildFeatures {
+        dataBinding = true
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
